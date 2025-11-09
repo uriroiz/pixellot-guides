@@ -105,6 +105,26 @@
             position: relative;
             overflow: hidden;
             cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            min-height: 400px;
+        }
+
+        .guide-card.rtl {
+            direction: rtl;
+            text-align: right;
+        }
+
+        .guide-card.rtl .guide-header {
+            flex-direction: row-reverse;
+        }
+
+        .guide-card.rtl .view-guide-btn {
+            flex-direction: row-reverse;
+        }
+
+        .guide-card.rtl .view-guide-btn svg {
+            transform: rotate(180deg);
         }
 
         .guide-card::before {
@@ -117,6 +137,10 @@
             background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan));
             transform: scaleX(0);
             transition: transform 0.3s ease;
+        }
+
+        .guide-card.rtl::before {
+            background: linear-gradient(270deg, var(--accent-blue), var(--accent-cyan));
         }
 
         .guide-card:hover {
@@ -158,10 +182,15 @@
             letter-spacing: 0.05em;
         }
 
+        .guide-card.rtl .language-badge {
+            text-transform: none;
+        }
+
         .guide-description {
             color: var(--text-secondary);
             margin-bottom: 1.5rem;
             line-height: 1.6;
+            flex-grow: 1;
         }
 
         .guide-meta {
@@ -170,7 +199,17 @@
             gap: 1rem;
             font-size: 0.875rem;
             color: var(--text-secondary);
-            margin-top: 1rem;
+            margin-top: auto;
+            margin-bottom: 1rem;
+        }
+
+        .guide-date {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
         }
 
         .guide-meta-item {
@@ -193,7 +232,8 @@
             cursor: pointer;
             transition: all 0.3s ease;
             text-decoration: none;
-            margin-top: 1rem;
+            margin-top: auto;
+            width: fit-content;
         }
 
         .view-guide-btn:hover {
@@ -287,26 +327,40 @@
                 language: 'English',
                 langCode: 'EN',
                 file: 'SendLoggingVidswap_ENG.html',
-                icon: '📹'
+                icon: '📹',
+                dateUpdated: null // Will be set dynamically
             },
             {
                 id: 'send-logging-vidswap-heb',
                 title: 'העלאה ותיוג משחקים ב-Pixellot',
                 description: 'מדריך שלב אחר שלב מלא להעלאת וידאו משחקים ורישומם בפלטפורמות Pixellot ו-Vidswap.',
-                language: 'Hebrew',
-                langCode: 'HE',
+                language: 'עברית',
+                langCode: 'עב',
                 file: 'SendLoggingVidswap_HEB.html',
-                icon: '📹'
+                icon: '📹',
+                isRTL: true,
+                buttonText: 'צפה במדריך',
+                dateUpdated: null // Will be set dynamically
             }
         ];
 
         // Render guides
         function renderGuides() {
             const grid = document.getElementById('guidesGrid');
+            const today = new Date();
             
             guides.forEach(guide => {
                 const card = document.createElement('div');
-                card.className = 'guide-card';
+                card.className = 'guide-card' + (guide.isRTL ? ' rtl' : '');
+                
+                const buttonText = guide.buttonText || 'View Guide';
+                
+                // Format date based on language
+                const dateUpdated = guide.dateUpdated || (guide.isRTL 
+                    ? today.toLocaleDateString('he-IL', { year: 'numeric', month: 'long', day: 'numeric' })
+                    : today.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }));
+                
+                const dateLabel = guide.isRTL ? 'תאריך עדכון:' : 'Date updated:';
                 
                 card.innerHTML = `
                     <div class="guide-header">
@@ -315,6 +369,12 @@
                     </div>
                     <h2 class="guide-title">${guide.title}</h2>
                     <p class="guide-description">${guide.description}</p>
+                    <div class="guide-date">
+                        <svg class="icon" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path>
+                        </svg>
+                        <span>${dateLabel} ${dateUpdated}</span>
+                    </div>
                     <div class="guide-meta">
                         <span class="guide-meta-item">
                             <svg class="icon" fill="currentColor" viewBox="0 0 20 20">
@@ -325,7 +385,7 @@
                         </span>
                     </div>
                     <a href="${guide.file}" class="view-guide-btn" target="_blank">
-                        View Guide
+                        ${buttonText}
                         <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                         </svg>
