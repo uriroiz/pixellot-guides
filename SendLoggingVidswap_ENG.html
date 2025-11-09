@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload and Log Games in Pixellot - Workflow Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #1a202c;
+            background: #f7fafc;
+            padding: 20px;
+            direction: ltr;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+            color: white;
+            padding: 40px;
+            border-bottom: 3px solid #4299e1;
+        }
+        
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 15px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+        
+        .header-meta {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+            font-size: 0.9em;
+            opacity: 0.85;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .header-meta span {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .platform-link {
+            background: #edf2f7;
+            border-left: 3px solid #4299e1;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 4px;
+        }
+        
+        .platform-link h2 {
+            color: #2d3748;
+            margin-bottom: 8px;
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+        
+        .platform-link a {
+            color: #4299e1;
+            text-decoration: none;
+            font-weight: 500;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .platform-link a:hover {
+            text-decoration: underline;
+        }
+        
+        .step {
+            margin-bottom: 35px;
+            padding-bottom: 35px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .step:last-child {
+            border-bottom: none;
+        }
+        
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .step-number {
+            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 1.1em;
+            flex-shrink: 0;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .step h3 {
+            color: #2d3748;
+            font-size: 1.15em;
+            font-weight: 600;
+        }
+        
+        .step-description {
+            margin: 15px 0;
+            padding: 12px 20px;
+            background: #f7fafc;
+            border-left: 3px solid #cbd5e0;
+            border-radius: 2px;
+            color: #4a5568;
+        }
+        
+        .step-description.info {
+            background: #ebf8ff;
+            border-left-color: #4299e1;
+            color: #2c5282;
+        }
+        
+        .step-description.warning {
+            background: #fffaf0;
+            border-left-color: #ed8936;
+            color: #7c2d12;
+        }
+        
+        .step-description strong {
+            font-weight: 600;
+        }
+        
+        .section-divider {
+            margin: 50px 0;
+            text-align: center;
+            position: relative;
+        }
+        
+        .section-divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #cbd5e0;
+        }
+        
+        .section-divider span {
+            background: white;
+            padding: 10px 30px;
+            position: relative;
+            color: #4a5568;
+            font-weight: 600;
+            font-size: 1em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .footer {
+            background: #edf2f7;
+            padding: 30px;
+            text-align: center;
+            color: #718096;
+            font-size: 0.9em;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        .footer a {
+            color: #4299e1;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        .step-image {
+            width: 100%;
+            max-width: 800px;
+            height: auto;
+            border-radius: 4px;
+            border: 1px solid #e2e8f0;
+            margin-top: 15px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+            body {
+                background: white;
+                padding: 0;
+            }
+            
+            .container {
+                box-shadow: none;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header {
+                padding: 30px 20px;
+            }
+            
+            .header h1 {
+                font-size: 1.5em;
+            }
+            
+            .header-meta {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .content {
+                padding: 25px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Upload and Log Games in Pixellot</h1>
+            <div class="header-meta">
+                <span>📅 Created: November 09, 2025</span>
+                <span>👤 Created by: Uri Roiz</span>
+            </div>
+        </div>
+        
+        <div class="content">
+            <div class="platform-link">
+                <h2>📺 Pixellot Advantage Platform</h2>
+                <a href="https://advantage.pixellot.tv/teams/66264edf63ed300c7c02b018/events?team_id=66264edf63ed300c7c02b018" target="_blank">https://advantage.pixellot.tv</a>
+            </div>
+
+            <div class="section-divider">
+                <span>Part 1: Exporting Game Video</span>
+            </div>
+
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">1</div>
+                    <h3>Request HD Export</h3>
+                </div>
+                <p>Locate your game in the video list and click the <strong>three-dot menu (⋮)</strong> next to the game you want to export.</p>
+                <img src="https://images.tango.us/workflows/9036f5cc-4c2f-4e50-aa7b-84c1a93ec66c/steps/115fc327-8bf5-4b55-abfb-ff52bf70be1f/b3dbf838-279a-42ef-b53c-dd14a0b89baf.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.3456&fp-y=0.3803&fp-z=3.0832&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=570&mark-y=322&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz01MyZoPTUzJmZpdD1jcm9wJmNvcm5lci1yYWRpdXM9MTA%3D" alt="Request HD Export" class="step-image">
+            </div>
+
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">2</div>
+                    <h3>Select "Request HD Export"</h3>
+                </div>
+                <p>Click on <strong>Request HD export</strong> from the dropdown menu.</p>
+                <img src="https://images.tango.us/workflows/9036f5cc-4c2f-4e50-aa7b-84c1a93ec66c/steps/abdc1dca-e01b-4fd7-a28f-9fada1abf971/3d1da70f-9670-4e03-b4ff-08f9367433f4.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.2868&fp-y=0.6795&fp-z=2.3267&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=419&mark-y=318&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz0zNjImaD03MiZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" alt="Select Request HD Export" class="step-image">
+            </div>
+
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">3</div>
+                    <h3>Confirm Export Request</h3>
+                </div>
+                <p>Click <strong>Request HD export</strong> again to confirm.</p>
+                <div class="step-description info">
+                    ⏱️ The HD processing will take approximately <strong>20–30 minutes</strong>. You'll receive an email notification once completed.
+                </div>
+                <img src="https://images.tango.us/workflows/9036f5cc-4c2f-4e50-aa7b-84c1a93ec66c/steps/86108160-92e1-42d2-9717-e548a4ee8d8b/69e80046-0052-442f-bcfe-288094632a5b.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5607&fp-y=0.6059&fp-z=2.3992&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=432&mark-y=308&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz0zMzYmaD05MyZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" alt="Confirm Export Request" class="step-image">
+            </div>
+
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">4</div>
+                    <h3>Download HD File</h3>
+                </div>
+                <p>Once processing is complete, click the three-dot menu again and select <strong>Download HD</strong>.</p>
+                <img src="https://images.tango.us/workflows/9036f5cc-4c2f-4e50-aa7b-84c1a93ec66c/steps/2cf545b3-c23f-431d-9a11-6d695e22a089/c3ae2e9d-42e3-4098-afc6-3e1fb3e87b11.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.2868&fp-y=0.7157&fp-z=2.3267&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=419&mark-y=318&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz0zNjImaD03MiZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" alt="Download HD File" class="step-image">
+            </div>
+
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">5</div>
+                    <h3>Download the MP4 File</h3>
+                </div>
+                <p>Download the MP4 file by clicking the <strong>3-dots icon</strong> and selecting the download option.</p>
+                <img src="https://images.tango.us/workflows/9036f5cc-4c2f-4e50-aa7b-84c1a93ec66c/steps/01990ea3-6b2d-407a-9bf6-92a66fcb99d6/af7f1c11-2e97-41f9-bc99-73e40b32ef3a.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&fp-z=1.0026&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=2&mark-y=13&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0xMTk3Jmg9NjgzJmZpdD1jcm9wJmNvcm5lci1yYWRpdXM9MTA%3D" alt="Download MP4 File" class="step-image">
+            </div>
+
+            <div class="section-divider">
+                <span>Part 2: Uploading to Vidswap</span>
+            </div>
+
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">6</div>
+                    <h3>Upload New Game</h3>
+                </div>
+                <p>Click on <strong>Add video</strong> button.</p>
+                <img src="https://images.tango.us/workflows/9036f5cc-4c2f-4e50-aa7b-84c1a93ec66c/steps/93b4bddc-5f80-451f-90af-3cbccee30486/09c26e3f-c20b-47e7-bed7-6588958f85e4.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.9250&fp-y=0.3068&fp-z=2.8802&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=812&mark-y=306&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz0yNTgmaD05NiZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" alt="Upload New Game" class="step-image">
+            </div>
+
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">7</div>
+                    <h3>Select Upload Video</h3>
+                </div>
+                <p>Click on <strong>Upload Video</strong> option.</p>
+                <img src="https://images.tango.us/workflows/9036f5cc-4c2f-4e50-aa7b-84c1a93ec66c/steps/53d979ae-2da9-4e2a-a46c-df3e2ec40163/89b3dfbb-f13c-4680-bdaa-932a106a57e2.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.9040&fp-y=0.4380&fp-z=2.9078&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=661&mark-y=309&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz00MDgmaD05MSZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" alt="Select Upload Video" class="step-image">
+            </div>
+
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">8</div>
+                    <h3>Choose Content Type</h3>
+                </div>
+                <p>Select <strong>Game</strong> as the content type, then click <strong>Next</strong>.</p>
+                <img src="https://images.tango.us/workflows/9036f5cc-4c2f-4e50-aa7b-84c1a93ec66c/steps/39d5e84c-79ad-4ded-ad59-239b48f7de31/fe6873ca-5eb6-4483-abd3-0f4ecb1fe7a2.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.4403&fp-z=2.5713&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=823&mark-y=302&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz0yNzQmaD0xMDAmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" alt="Choose Content Type" class="step-image">
+            </div>
+
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">9</div>
+                    <h3>Upload Video File</h3>
+                </div>
+                <p>Click <strong>Angle</strong>, choose <strong>1st Angle</strong>, then browse and select the MP4 file you downloaded.</p>
+                <img src="https://images.tango.us/workflows/9036f5cc-4c2f-4e50-aa7b-84c1a93ec66c/steps/c3f7c80a-06ad-4d2b-9b74-0ddc1e037e22/a2072883-4848-4ddb-a96d-31dc23fc1e5b.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5678&fp-y=0.4605&fp-z=1.5854&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=222&mark-y=322&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz03NTYmaD02NSZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" alt="Upload Video File" class="step-image">
+            </div>
+
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">10</div>
+                    <h3>Confirm Upload Started</h3>
+                </div>
+                <p>Verify the file upload has started, then click <strong>Next</strong> to proceed.</p>
+                <img src="https://images.tango.us/workflows/9036f5cc-4c2f-4e50-aa7b-84c1a93ec66c/steps/7c8cd9b7-5b4b-4d39-8d92-e91bb898c1c5/96ca6765-0756-4185-af4b-fb82400a9cdd.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5678&fp-y=0.4748&fp-z=1.5854&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=222&mark-y=318&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz03NTYmaD03MyZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" alt="Confirm Upload Started" class="step-image">
+            </div>
+
+            <div class="section-divider">
+                <span>Part 3: Setting Game Details</span>
+            </div>
+
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">11</div>
+                    <h3>Set Game Date</h3>
+                </div>
+                <p>Select the date when the game was played using the calendar picker.</p>
+                <img src="https://images.tango.us/workflows/9036f5cc-4c2f-4e50-aa7b-84c1a93ec66c/steps/db39b4fc-90da-4af6-84f8-7fd030764dee/8d3c9a2f-414b-4b6c-aa65-001479f42819.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5445&fp-y=0.3326&fp-z=3.0850&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=574&mark-y=328&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz01MyZoPTUzJmZpdD1jcm9wJmNvcm5lci1yYWRpdXM9MTA%3D" alt="Set Game Date" class="step-image">
+            </div>
+
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">12</div>
+                    <h3>Set Venue Time Zone</h3>
+                </div>
+                <p>Click on the timezone dropdown and select <strong>(GMT+02:00) Helsinki, Kyiv, Riga, Sofia, Tallinn, Vilnius</strong>.</p>
+                <img src="https://images.tango.us/workflows/9036f5cc-4c2f-4e50-aa7b-84c1a93ec66c/steps/7bcd3b3f-d4e5-49f4-a0d8-ef3da19cded4/071e543f-8271-47f1-be8e-3fcaa6ba1d41.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.6587&fp-y=0.5428&fp-z=2.3000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=342&mark-y=307&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz01MTYmaD05NSZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" alt="Set Venue Time Zone" class="step-image">
+            </div>
+
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">13</div>
+                    <h3>Set Game Start Time</h3>
+                </div>
+                <p>Enter the time when the game started.</p>
+                <img src="https://images.tango.us/workflows/9036f5cc-4c2f-4e50-aa7b-84c1a93ec66c/steps/e815959a-29c5-466d-94be-0c10e28b065a/0cda5011-f420-4a50-a7fe-310f3e374893.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.4494&fp-y=0.3452&fp-z=2.1305&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=383&mark-y=314&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz00MzMmaD04MSZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" alt="Set Game Start Time" class="step-image">
+            </div>
+
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">14</div>
+                    <h3>Set Game End Time</h3>
+                </div>
+                <p>Enter the time when the game ended.</p>
+                <img src="https://images.tango.us/workflows/9036f5cc-4c2f-4e50-aa7b-84c1a93ec66c/steps/7f90d118-860b-406d-ba14-c6223d67ea7e/99c00665-2c12-421b-ae9d-dfbe1fb52b9b.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.6587&fp-y=0.5000&fp-z=2.3000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=342&mark-y=307&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz01MTYmaD05NSZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" alt="Set Game End Time" class="step-image">
+            </div>
+
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">15</div>
+                    <h3>Assign Home and Away Teams</h3>
+                </div>
+                <p>Choose which team plays at <strong>Home</strong> and which plays <strong>Away</strong>.</p>
+                <img src="https://images.tango.us/workflows/9036f5cc-4c2f-4e50-aa7b-84c1a93ec66c/steps/5972bab4-9ed6-46b1-80c4-e37636804346/c7b53442-4e33-4e7a-a68d-6f17671e3307.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5777&fp-y=0.6290&fp-z=2.0522&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=1012&mark-y=252&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz00MCZoPTQwJmZpdD1jcm9wJmNvcm5lci1yYWRpdXM9MTA%3D" alt="Assign Home and Away Teams" class="step-image">
+            </div>
+
+            <div class="section-divider">
+                <span>Part 4: Creating Opponent Team</span>
+            </div>
+
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">16</div>
+                    <h3>Create Opponent Team</h3>
+                </div>
+                <p>Press on <strong>Create Team</strong> button.</p>
+                <img src="https://images.tango.us/workflows/9036f5cc-4c2f-4e50-aa7b-84c1a93ec66c/steps/f702f864-0587-4b2c-a001-58f3013ffbb3/c45961f8-edae-44e0-a235-56b18a8c0de4.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.4393&fp-y=0.7420&fp-z=2.3992&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=432&mark-y=308&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz0zMzYmaD05MyZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" alt="Create Opponent Team" class="step-image">
+            </div>
+
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">17</div>
+                    <h3>Enter Team Name</h3>
+                </div>
+                <p>Type the name of the opposing team.</p>
+                <div class="step-description">
+                    Example: "מליצור נתניה" (for Hebrew teams)
+                </div>
+                <img src="https://images.tango.us/workflows/9036f5cc-4c2f-4e50-aa7b-84c1a93ec66c/steps/17dca320-ef28-4534-a3b0-755ca36c4b5f/9f0ccf5b-5d84-4ac5-99ba-0ab2dc8a2ae5.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5678&fp-y=0.3650&fp-z=1.8295&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=329&mark-y=320&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz01NDEmaD03MCZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" alt="Enter Team Name" class="step-image">
+            </div>
+
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">18</div>
+                    <h3>Select Team Color</h3>
+                </div>
+                <p>Click on <strong>Team color</strong> and choose the opposing team's jersey color.</p>
+                <img src="https://images.tango.us/workflows/9036f5cc-4c2f-4e50-aa7b-84c1a93ec66c/steps/939f318d-9bf0-43e1-8c83-de8545522c38/1f9fc2a1-c921-4a44-a224-4e7d155c4963.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5801&fp-y=0.6471&fp-z=1.9207&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=346&mark-y=318&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz01MDkmaD03MyZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" alt="Select Team Color" class="step-image">
+            </div>
+
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">19</div>
+                    <h3>Select Gender Category</h3>
+                </div>
+                <p>Click on <strong>Gender</strong> and select either <strong>"Boys"</strong> or <strong>"Girls"</strong>.</p>
+                <img src="https://images.tango.us/workflows/9036f5cc-4c2f-4e50-aa7b-84c1a93ec66c/steps/ba0075d3-f957-49c3-ad4c-fd999d8fc589/b5a25a55-950b-4a57-85a5-649ac73e0561.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5548&fp-y=0.5527&fp-z=1.9207&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=346&mark-y=318&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz01MDkmaD03MyZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" alt="Select Gender Category" class="step-image">
+            </div>
+
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">20</div>
+                    <h3>Save Team</h3>
+                </div>
+                <p>Click on <strong>Create & Save</strong> to finalize the team creation.</p>
+                <img src="https://images.tango.us/workflows/9036f5cc-4c2f-4e50-aa7b-84c1a93ec66c/steps/7d830962-d38a-461b-8211-8358fa55efc5/31c72f51-d24f-431a-85a3-24fe56eb90cb.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.6304&fp-y=0.7179&fp-z=2.3733&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=427&mark-y=309&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz0zNDYmaD05MiZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" alt="Save Team" class="step-image">
+            </div>
+
+            <div class="section-divider">
+                <span>Part 5: Finalizing Upload</span>
+            </div>
+
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">21</div>
+                    <h3>Monitor Upload Status</h3>
+                </div>
+                <div class="step-description warning">
+                    ⚠️ <strong>Important:</strong> The <strong>Save</strong> button will remain disabled until the file upload is complete. Please wait for the upload to finish.
+                </div>
+                <img src="https://images.tango.us/workflows/9036f5cc-4c2f-4e50-aa7b-84c1a93ec66c/steps/60575591-66d3-4344-bfa2-fb1c14ec9ee4/362d9fef-1e54-44d2-8d6c-3b126a3f4989.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5633&fp-y=0.2355&fp-z=1.5288&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=201&mark-y=220&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz03OTgmaD03MCZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" alt="Monitor Upload Status" class="step-image">
+            </div>
+
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">22</div>
+                    <h3>Save Game</h3>
+                </div>
+                <p>Click <strong>Save</strong> once the button becomes active (upload complete).</p>
+                <img src="https://images.tango.us/workflows/9036f5cc-4c2f-4e50-aa7b-84c1a93ec66c/steps/2807b9af-2e46-476d-9941-3de699744410/91675bd7-d096-46b1-9ab0-ea994d7aaefa.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.6123&fp-y=0.7783&fp-z=2.5713&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=463&mark-y=305&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTYlMkNGRjc0NDImdz0yNzQmaD0xMDAmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" alt="Save Game" class="step-image">
+            </div>
+
+            <div class="section-divider">
+                <span>Part 6: Logging the Game</span>
+            </div>
+
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">23</div>
+                    <h3>Open Vidswap Platform</h3>
+                </div>
+                <p>Navigate to <a href="https://app.vidswap.com" target="_blank">https://app.vidswap.com</a> and click the <strong>Refresh</strong> button to see the newly uploaded game.</p>
+                <img src="https://images.tango.us/workflows/9036f5cc-4c2f-4e50-aa7b-84c1a93ec66c/steps/5be215e8-2e96-4ed4-ac4d-54456b952b4a/f636a28a-6733-4bd9-ac1d-ed759febfa78.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.8384&fp-y=0.1658&fp-z=2.8178&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=513&mark-y=276&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0yODEmaD0xMTAmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" alt="Open Vidswap Platform" class="step-image">
+            </div>
+
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">24</div>
+                    <h3>Wait for Video Processing</h3>
+                </div>
+                <p>The new game will appear in the list with <strong>"No Video"</strong> status.</p>
+                <div class="step-description info">
+                    ⏱️ <strong>Wait up to 40 minutes</strong> for the video to become available for logging.
+                </div>
+                <img src="https://images.tango.us/workflows/9036f5cc-4c2f-4e50-aa7b-84c1a93ec66c/steps/426a07d5-2cfd-4ae4-9635-1ec86cbbe346/4c58bf5b-a694-4cc6-9f07-0309a371a6dc.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.4559&fp-y=0.2876&fp-z=2.5458&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=458&mark-y=271&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0yODMmaD0xNjcmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" alt="Wait for Video Processing" class="step-image">
+            </div>
+
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">25</div>
+                    <h3>Open Actions Menu</h3>
+                </div>
+                <p>Press on the <strong>"Actions"</strong> drop-down menu for the game.</p>
+                <img src="https://images.tango.us/workflows/9036f5cc-4c2f-4e50-aa7b-84c1a93ec66c/steps/dbb07aad-c030-4cb2-b7d4-10673c323b59/e59be22e-ca12-42a4-9c01-aeb279a2e9ca.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.8599&fp-y=0.3382&fp-z=2.4325&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=918&mark-y=188&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0yNjEmaD0xOTEmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" alt="Open Actions Menu" class="step-image">
+            </div>
+
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">26</div>
+                    <h3>Start Logging</h3>
+                </div>
+                <p>Click on <strong>Log game</strong> from the Actions menu.</p>
+                <img src="https://images.tango.us/workflows/9036f5cc-4c2f-4e50-aa7b-84c1a93ec66c/steps/ea548a0c-14be-4138-9bb2-fa75b99dc0ac/11cae3e2-65c5-4270-b33c-dd7a30c097cf.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.9254&fp-y=0.3941&fp-z=2.9078&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=795&mark-y=309&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0yOTAmaD05MSZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" alt="Start Logging" class="step-image">
+            </div>
+
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">27</div>
+                    <h3>Confirm Logging Submission</h3>
+                </div>
+                <p>Confirm the playlist logging submission by clicking <strong>Yes</strong>.</p>
+                <img src="https://images.tango.us/workflows/9036f5cc-4c2f-4e50-aa7b-84c1a93ec66c/steps/bc6acfe0-7426-453e-bcf9-419089d6ad84/e3f15576-d18e-434d-aacb-1fb5296acd21.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.4721&fp-y=0.5543&fp-z=2.8260&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=509&mark-y=311&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0xODMmaD04OCZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" alt="Confirm Logging Submission" class="step-image">
+            </div>
+
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">28</div>
+                    <h3>Final Save</h3>
+                </div>
+                <p>Click on <strong>Save</strong> to submit the game for logging.</p>
+                <img src="https://images.tango.us/workflows/9036f5cc-4c2f-4e50-aa7b-84c1a93ec66c/steps/3bd1a238-7f07-4199-a733-e7bb59bb237c/1afa2f33-2969-4907-a28e-fb3314fa3764.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5153&fp-y=0.5185&fp-z=2.0000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=726&mark-y=466&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0xMzEmaD03OCZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" alt="Final Save" class="step-image">
+            </div>
+
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">29</div>
+                    <h3>Logging in Progress</h3>
+                </div>
+                <p>The match will be sent for logging and show a <strong>"Being Logged"</strong> status.</p>
+                <div class="step-description info">
+                    📧 <strong>You will receive an email notification when the logging job finishes.</strong>
+                </div>
+                <img src="https://images.tango.us/workflows/9036f5cc-4c2f-4e50-aa7b-84c1a93ec66c/steps/b08fc2af-8739-4cf1-9f57-9338cf8eaf59/67a5c145-3340-47bf-b324-ef928d874bb5.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.4559&fp-y=0.2969&fp-z=2.4339&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=464&mark-y=259&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0yNzEmaD0xOTEmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" alt="Logging in Progress" class="step-image">
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Created with <a href="https://tango.ai" target="_blank">Tango.ai</a></p>
+            <p style="margin-top: 10px; font-size: 0.85em;">Pixellot Sports Video Technology Workflow</p>
+        </div>
+    </div>
+</body>
+</html>
