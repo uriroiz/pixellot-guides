@@ -328,7 +328,7 @@
                 langCode: 'EN',
                 file: 'SendLoggingVidswap_ENG.html',
                 icon: '📹',
-                dateUpdated: null // Will be set dynamically
+                dateUpdated: 'November 9, 2025'
             },
             {
                 id: 'send-logging-vidswap-heb',
@@ -340,7 +340,7 @@
                 icon: '📹',
                 isRTL: true,
                 buttonText: 'צפה במדריך',
-                dateUpdated: null // Will be set dynamically
+                dateUpdated: '9 בנובמבר 2025'
             },
             {
                 id: 'developer-accounts-heb',
@@ -352,7 +352,7 @@
                 icon: '🔑',
                 isRTL: true,
                 buttonText: 'צפה במדריך',
-                dateUpdated: null // Will be set dynamically
+                dateUpdated: '12 בנובמבר 2025'
             }
         ];
 
@@ -368,6 +368,7 @@
                 const buttonText = guide.buttonText || 'View Guide';
                 
                 // Format date based on language
+                // Only use today's date if dateUpdated is not specified (for new guides only)
                 const dateUpdated = guide.dateUpdated || (guide.isRTL 
                     ? today.toLocaleDateString('he-IL', { year: 'numeric', month: 'long', day: 'numeric' })
                     : today.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }));
