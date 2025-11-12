@@ -177,6 +177,12 @@
             font-weight: 600;
         }
         
+        .currency {
+            direction: ltr;
+            unicode-bidi: embed;
+            display: inline-block;
+        }
+        
         .section-divider {
             margin: 50px 0;
             text-align: center;
@@ -355,7 +361,6 @@
       <h1>פתיחת חשבונות מפתח ל-Google ול-Apple</h1>
       <div class="header-meta">
         <span>📅 עודכן: נובמבר 2025</span>
-        <span>👤 הוכן עבור: לקוחות פיקסלוט</span>
       </div>
     </div>
 
@@ -394,7 +399,7 @@
         </div>
         <p>היכנסו ל־<a href="https://play.google.com/console/signup" target="_blank">Play Console</a> עם החשבון הנבחר, אשרו את הסכם המפתחים (Developer Distribution Agreement) ופעלו לפי ההוראות על המסך.</p>
         <p class="step-description info">
-          💳 תשלום חד-פעמי לפתיחת החשבון: <strong>25$</strong>.
+          💳 תשלום חד-פעמי לפתיחת החשבון: <strong><span class="currency">$25</span></strong>.
         </p>
       </div>
 
@@ -458,7 +463,7 @@
         </div>
         <p>היכנסו לעמוד <a href="https://developer.apple.com/programs/enroll" target="_blank">Enroll</a>, בחרו <strong>Individual</strong> או <strong>Organization</strong>, אשרו הסכמים והשלימו פרטים.</p>
         <p class="step-description info">
-          💳 דמי חברות שנתיים: <strong>99$</strong>.
+          💳 דמי חברות שנתיים: <strong><span class="currency">$99</span></strong>.
         </p>
       </div>
 
@@ -503,9 +508,6 @@
       </div>
     </div>
 
-    <div class="footer">
-      <p>טכנולוגיית וידאו ספורט Pixellot</p>
-    </div>
   </div>
 </body>
 </html>
