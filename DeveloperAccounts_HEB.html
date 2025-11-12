@@ -229,6 +229,30 @@
             text-decoration: underline;
         }
         
+        .back-to-home {
+            text-align: center;
+            margin: 40px 0;
+            padding: 20px 0;
+        }
+        
+        .back-to-home-btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(66, 153, 225, 0.3);
+        }
+        
+        .back-to-home-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(66, 153, 225, 0.4);
+        }
+        
         @media print {
             body {
                 background: white;
@@ -323,6 +347,16 @@
             .footer {
                 padding: 20px 15px;
                 font-size: 0.85em;
+            }
+            
+            .back-to-home {
+                margin: 30px 0;
+                padding: 15px 0;
+            }
+            
+            .back-to-home-btn {
+                padding: 10px 25px;
+                font-size: 0.9em;
             }
         }
         
@@ -506,6 +540,10 @@
         </div>
         <p>לאחר הקמת שני החשבונות, הזמינו את נציג פיקסלוט הרלוונטי בחלוקות ההרשאות (Google: <strong>Users and permissions</strong>, Apple: <strong>Users and Access</strong>) כדי שנוכל להמשיך בהעלאת האפליקציה לחנויות.</p>
       </div>
+    </div>
+    
+    <div class="back-to-home">
+      <a href="https://pixellot-guides.vercel.app/" class="back-to-home-btn">← חזרה לדף הראשי</a>
     </div>
 
   </div>
