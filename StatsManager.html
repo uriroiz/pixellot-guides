@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ניהול סטטיסטיקה והכנה למשחק - ליגה לאומית</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.8;
+            color: #1a202c;
+            background: #f7fafc;
+            padding: 20px;
+            direction: rtl;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+            color: white;
+            padding: 40px;
+            border-bottom: 3px solid #4299e1;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 15px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+        
+        .header-meta {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+            font-size: 0.9em;
+            opacity: 0.85;
+        }
+        
+        .header-meta span {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .platform-link {
+            background: linear-gradient(135deg, #ebf8ff 0%, #e6f7ff 100%);
+            border-right: 4px solid #4299e1;
+            border-left: 4px solid #4299e1;
+            padding: 25px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(66, 153, 225, 0.15);
+        }
+        
+        .platform-link h2 {
+            color: #2d3748;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            font-weight: 700;
+        }
+        
+        .platform-link a {
+            color: #2b6cb0;
+            text-decoration: none;
+            font-weight: 700;
+            font-family: 'Courier New', monospace;
+            direction: ltr;
+            display: inline-block;
+            font-size: 1.15em;
+            background: white;
+            padding: 12px 20px;
+            border-radius: 6px;
+            border: 2px solid #4299e1;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(66, 153, 225, 0.2);
+        }
+        
+        .platform-link a:hover {
+            background: #4299e1;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(66, 153, 225, 0.3);
+        }
+        
+        .step {
+            margin-bottom: 35px;
+            padding-bottom: 35px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .step:last-child {
+            border-bottom: none;
+        }
+        
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .step-number {
+            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 1.1em;
+            flex-shrink: 0;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .step h3 {
+            color: #2d3748;
+            font-size: 1.15em;
+            font-weight: 600;
+        }
+        
+        .step-description {
+            margin: 15px 0;
+            padding: 12px 20px;
+            background: #f7fafc;
+            border-right: 3px solid #cbd5e0;
+            border-radius: 2px;
+            color: #4a5568;
+        }
+        
+        .step-description.info {
+            background: #ebf8ff;
+            border-right-color: #4299e1;
+            color: #2c5282;
+        }
+        
+        .step-description.warning {
+            background: #fffaf0;
+            border-right-color: #ed8936;
+            color: #7c2d12;
+        }
+        
+        .step-description strong {
+            font-weight: 600;
+        }
+        
+        .section-divider {
+            margin: 50px 0;
+            text-align: center;
+            position: relative;
+        }
+        
+        .section-divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #cbd5e0;
+        }
+        
+        .section-divider span {
+            background: white;
+            padding: 10px 30px;
+            position: relative;
+            color: #4a5568;
+            font-weight: 600;
+            font-size: 1em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .footer {
+            background: #edf2f7;
+            padding: 30px;
+            text-align: center;
+            color: #718096;
+            font-size: 0.9em;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        .footer a {
+            color: #4299e1;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        .back-to-home {
+            text-align: center;
+            margin: 40px 0;
+            padding: 20px 0;
+        }
+        
+        .back-to-home-btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(66, 153, 225, 0.3);
+        }
+        
+        .back-to-home-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(66, 153, 225, 0.4);
+        }
+        
+        .step-image {
+            width: 100%;
+            max-width: 800px;
+            height: auto;
+            border-radius: 4px;
+            border: 1px solid #e2e8f0;
+            margin-top: 15px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            
+            .container {
+                box-shadow: none;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                border-radius: 0;
+            }
+            
+            .header {
+                padding: 25px 15px;
+            }
+            
+            .header h1 {
+                font-size: 1.4em;
+                line-height: 1.3;
+            }
+            
+            .header-meta {
+                flex-direction: column;
+                gap: 10px;
+                font-size: 0.85em;
+            }
+            
+            .content {
+                padding: 20px 15px;
+            }
+            
+            .platform-link {
+                padding: 15px;
+                margin-bottom: 20px;
+            }
+            
+            .platform-link h2 {
+                font-size: 1.1em;
+            }
+            
+            .platform-link a {
+                font-size: 0.85em;
+                word-break: break-all;
+                display: block;
+                margin-top: 8px;
+            }
+            
+            .step {
+                margin-bottom: 25px;
+                padding-bottom: 25px;
+            }
+            
+            .step-header {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            
+            .step-number {
+                width: 35px;
+                height: 35px;
+                font-size: 1em;
+            }
+            
+            .step h3 {
+                font-size: 1.05em;
+                line-height: 1.4;
+            }
+            
+            .step-description {
+                padding: 10px 15px;
+                font-size: 0.9em;
+                margin: 12px 0;
+            }
+            
+            .section-divider {
+                margin: 35px 0;
+            }
+            
+            .section-divider span {
+                padding: 8px 15px;
+                font-size: 0.85em;
+            }
+            
+            .step-image {
+                margin-top: 12px;
+                border-radius: 4px;
+            }
+            
+            .footer {
+                padding: 20px 15px;
+                font-size: 0.85em;
+            }
+            
+            .back-to-home {
+                margin: 30px 0;
+                padding: 15px 0;
+            }
+            
+            .back-to-home-btn {
+                padding: 10px 25px;
+                font-size: 0.9em;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            body {
+                padding: 5px;
+            }
+            
+            .header {
+                padding: 20px 12px;
+            }
+            
+            .header h1 {
+                font-size: 1.2em;
+            }
+            
+            .content {
+                padding: 15px 12px;
+            }
+            
+            .step-number {
+                width: 32px;
+                height: 32px;
+                font-size: 0.95em;
+            }
+            
+            .step h3 {
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>ניהול סטטיסטיקה והכנה למשחק - ליגה לאומית</h1>
+            <div class="header-meta">
+                <span>📅 תאריך יצירה: 16 בנובמבר, 2025</span>
+                <span>👤 נוצר על ידי: אורי רויז</span>
+            </div>
+        </div>
+        
+        <div class="content">
+            <div class="platform-link">
+                <h2>📊 מערכת ניהול סטטיסטיקות</h2>
+                <a href="https://basketball-stats-manager.vercel.app/" target="_blank">https://basketball-stats-manager.vercel.app/</a>
+            </div>
+
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">1</div>
+                    <h3>טאב כל המשחקים</h3>
+                </div>
+                <p>בטאב זה יופיעו כל המשחקים שנערכו עד כה. ניתן לסנן לפי מחזור, לפי קבוצה, או באמצעות חיפוש חופשי. לחיצה על "נקה סינון" תסיר את כל המסננים שנבחרו ותציג מחדש את הטבלה המלאה.</p>
+                <img src="https://images.tango.us/workflows/54491bd5-33b8-4ec2-b5da-9b38c100d338/steps/5002d30b-74fa-447a-bbf6-041f92bc256e/68cf194f-39c5-4cb9-a8cd-3b579fbe6ba2.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=1045&mark-y=185&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTMlMkNGRjc0NDImdz04NSZoPTM3JmZpdD1jcm9wJmNvcm5lci1yYWRpdXM9MTA%3D" alt="טאב כל המשחקים" class="step-image">
+            </div>
+
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">2</div>
+                    <h3>טאב סטטיסטיקות קבוצתיות</h3>
+                </div>
+                <p>בטאב זה יופיעו כל הסטטיסטיקות הקבוצתיות הרלוונטיות. הטאב נפתח כברירת מחדל בתצוגת ממוצעים, וניתן ללחוץ על כפתור "הצג סה״כ" כדי לצפות בסטטיסטיקות המצטברות של כל קבוצה בקטגוריות הרלוונטיות.</p>
+                <img src="https://images.tango.us/workflows/54491bd5-33b8-4ec2-b5da-9b38c100d338/steps/3cc40efb-bd28-4517-b2c6-a99f69190ec3/54fcdb51-fb72-449a-bc97-ed4f7ab102bb.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=801&mark-y=193&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTMlMkNGRjc0NDImdz03OCZoPTQ2JmZpdD1jcm9wJmNvcm5lci1yYWRpdXM9MTA%3D" alt="טאב סטטיסטיקות קבוצתיות" class="step-image">
+            </div>
+
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">3</div>
+                    <h3>טאב סטטיסטיקות שחקנים</h3>
+                </div>
+                <p>בטאב זה יופיעו כל הסטטיסטיקות האישיות הרלוונטיות. הטאב נפתח כברירת מחדל בתצוגת ממוצעים, וניתן ללחוץ על כפתור "הצג סה״כ" כדי לצפות בסטטיסטיקות המצטברות של כל שחקן בקטגוריות הרלוונטיות. בנוסף, ניתן לסנן לפי קבוצה לצפייה בשחקניה, וכן לבצע חיפוש חופשי לפי שם או מספר חולצה. לחיצה על "נקה סינון" תחזיר את התצוגה לטבלה כללית.</p>
+                <img src="https://images.tango.us/workflows/54491bd5-33b8-4ec2-b5da-9b38c100d338/steps/acc44d26-70af-423b-b6d3-a2d16f5e0d8e/754140f0-129d-4081-8535-e39c79523b1d.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=1000&mark-y=181&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTMlMkNGRjc0NDImdz0xNjcmaD0zNyZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" alt="טאב סטטיסטיקות שחקנים" class="step-image">
+            </div>
+
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">4</div>
+                    <h3>טאב ניתוח משחק</h3>
+                </div>
+                <p>לקראת הכנה למשחק, יש לבחור קבוצת בית וקבוצת חוץ, ולאחר מכן ללחוץ על כפתור "נתח משחק". לאחר מספר שניות יוצגו ממוצעי הסטטיסטיקות והדירוגים של שתי הקבוצות שנבחרו – נקודות, ריבאונדים, אסיסטים, חטיפות ומדד יעילות פר משחק, כולל דירוג הליגה בכל אחת מהקטגוריות. בנוסף יוצגו מאזן הבית, ממוצע הניצחונות בבית וממוצע ההפסדים בבית (לקבוצה הביתית), וכן הנתונים המקבילים עבור הקבוצה האורחת. כמו כן, יופיע מאזן חמשת המשחקים האחרונים של כל אחת מהקבוצות.</p>
+                <img src="https://images.tango.us/workflows/54491bd5-33b8-4ec2-b5da-9b38c100d338/steps/b6d83785-a93d-480b-96b6-fc8cbc0bcc91/c4fac4aa-de1b-4bda-992c-3087f0702c22.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=614&mark-y=162&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTMlMkNGRjc0NDImdz01NTImaD0yNzMmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" alt="טאב ניתוח משחק" class="step-image">
+            </div>
+
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">5</div>
+                    <h3>השוואת שחקנים</h3>
+                </div>
+                <p>לאחר לחיצה על "נתח משחק", ניתן לבחור שני שחקנים – מכל אחת מהקבוצות או מאותה קבוצה – ולקבל השוואה ביניהם הכוללת נקודות, ריבאונדים, אסיסטים, חטיפות, מדד יעילות ומדד פלוס/מינוס למשחק.</p>
+                <img src="https://images.tango.us/workflows/54491bd5-33b8-4ec2-b5da-9b38c100d338/steps/5e98f376-1213-4e8c-8f07-9630dea6d415/23062f0c-ed72-4003-bb91-5e8e185f6ab7.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=23&mark-y=213&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTMlMkNGRjc0NDImdz01NjUmaD0zOCZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" alt="השוואת שחקנים" class="step-image">
+            </div>
+
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">6</div>
+                    <h3>מפגשים ישירים</h3>
+                </div>
+                <p>מתחת להשוואת השחקנים תופיע טבלת סיכום של המפגשים הישירים בין שתי הקבוצות במהלך העונה, הכוללת את תוצאות המשחקים, תאריכי קיומם והמחזורים שבהם נערכו.</p>
+                <img src="https://images.tango.us/workflows/54491bd5-33b8-4ec2-b5da-9b38c100d338/steps/7979523d-4844-4d7c-9382-a735af8f9966/52c7d6dd-7654-4b38-b9d9-6266e74476e5.png?fm=png&crop=focalpoint&fit=crop&fp-x=0.5000&fp-y=0.5000&w=1200&border=2%2CF4F2F7&border-radius=8%2C8%2C8%2C8&border-radius-inner=8%2C8%2C8%2C8&blend-align=bottom&blend-mode=normal&blend-x=0&blend-w=1200&blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&mark-x=9&mark-y=3&m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTMlMkNGRjc0NDImdz0xMTcwJmg9NzAzJmZpdD1jcm9wJmNvcm5lci1yYWRpdXM9MTA%3D" alt="מפגשים ישירים" class="step-image">
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>נוצר עם <a href="https://tango.ai" target="_blank">Tango.ai</a></p>
+            <p style="margin-top: 10px; font-size: 0.85em;">מערכת ניהול סטטיסטיקה - ליגה לאומית בכדורסל</p>
+        </div>
+    </div>
+</body>
+</html>

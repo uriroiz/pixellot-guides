@@ -296,6 +296,167 @@
             height: 20px;
             display: inline-block;
         }
+
+        .protected-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.375rem 0.75rem;
+            background: rgba(234, 179, 8, 0.15);
+            border: 1px solid rgba(234, 179, 8, 0.3);
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #eab308;
+            margin-top: 0.5rem;
+        }
+
+        /* Password Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2.5rem;
+            max-width: 450px;
+            width: 90%;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-content.rtl {
+            direction: rtl;
+            text-align: right;
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-icon {
+            font-size: 2.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .modal-description {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .password-input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .password-input-group label {
+            display: block;
+            color: var(--text-primary);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .password-input {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-family: 'Courier New', monospace;
+            transition: all 0.3s ease;
+        }
+
+        .password-input:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .password-error {
+            color: #ef4444;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        .password-error.active {
+            display: block;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: 0.875rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9375rem;
+        }
+
+        .modal-btn-primary {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+            color: white;
+        }
+
+        .modal-btn-primary:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.4);
+        }
+
+        .modal-btn-secondary {
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        .modal-btn-secondary:hover {
+            color: var(--text-primary);
+            border-color: var(--accent-blue);
+        }
     </style>
 </head>
 <body>
@@ -317,6 +478,34 @@
                 <a href="https://vercel.com" target="_blank">Vercel</a>
             </div>
         </footer>
+    </div>
+
+    <!-- Password Protection Modal -->
+    <div class="modal-overlay" id="passwordModal">
+        <div class="modal-content" id="modalContent">
+            <div class="modal-header">
+                <span class="modal-icon">🔒</span>
+                <h3 class="modal-title" id="modalTitle">Protected Content</h3>
+            </div>
+            <p class="modal-description" id="modalDescription">
+                This guide is password protected. Please enter the access code to continue.
+            </p>
+            <div class="password-input-group">
+                <label for="passwordInput" id="passwordLabel">Access Code</label>
+                <input 
+                    type="password" 
+                    id="passwordInput" 
+                    class="password-input" 
+                    placeholder="Enter password..."
+                    autocomplete="off"
+                >
+                <div class="password-error" id="passwordError">Incorrect password. Please try again.</div>
+            </div>
+            <div class="modal-buttons">
+                <button class="modal-btn modal-btn-secondary" id="cancelBtn">Cancel</button>
+                <button class="modal-btn modal-btn-primary" id="submitBtn">Submit</button>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -355,8 +544,25 @@
                 isRTL: true,
                 buttonText: 'צפה במדריך',
                 dateUpdated: '12 בנובמבר 2025'
+            },
+            {
+                id: 'stats-manager-heb',
+                title: 'ניהול סטטיסטיקה והכנה למשחק - ליגה לאומית',
+                description: 'מדריך מקיף לשימוש במערכת ניהול הסטטיסטיקות של הליגה הלאומית - צפייה במשחקים, סטטיסטיקות קבוצתיות ואישיות, ניתוח משחקים והכנה למשחק הבא.',
+                language: 'עברית',
+                langCode: 'עב',
+                file: 'StatsManager.html',
+                icon: '📊',
+                isRTL: true,
+                buttonText: 'צפה במדריך',
+                dateUpdated: '16 בנובמבר 2025',
+                isProtected: true,
+                password: 'WinnerLeague2025'
             }
         ];
+
+        // Current guide being accessed
+        let currentProtectedGuide = null;
 
         // Render guides
         function renderGuides() {
@@ -377,6 +583,16 @@
                 
                 const dateLabel = guide.isRTL ? 'תאריך עדכון:' : 'Date updated:';
                 
+                // Protected badge
+                const protectedBadge = guide.isProtected 
+                    ? `<div class="protected-badge">
+                        <svg class="icon" fill="currentColor" viewBox="0 0 20 20" style="width: 16px; height: 16px;">
+                            <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path>
+                        </svg>
+                        ${guide.isRTL ? 'מוגן בסיסמה' : 'Protected'}
+                    </div>`
+                    : '';
+                
                 card.innerHTML = `
                     <div class="guide-header">
                         <span style="font-size: 2rem;">${guide.icon}</span>
@@ -384,6 +600,7 @@
                     </div>
                     <h2 class="guide-title">${guide.title}</h2>
                     <p class="guide-description">${guide.description}</p>
+                    ${protectedBadge}
                     <div class="guide-date">
                         <svg class="icon" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path>
@@ -399,20 +616,127 @@
                             ${guide.language}
                         </span>
                     </div>
-                    <a href="${guide.file}" class="view-guide-btn" target="_blank">
+                    <button class="view-guide-btn" data-guide-id="${guide.id}">
                         ${buttonText}
                         <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                         </svg>
-                    </a>
+                    </button>
                 `;
+                
+                // Add click event to button
+                const btn = card.querySelector('.view-guide-btn');
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    handleGuideAccess(guide);
+                });
                 
                 grid.appendChild(card);
             });
         }
 
+        // Handle guide access (protected or direct)
+        function handleGuideAccess(guide) {
+            if (guide.isProtected) {
+                currentProtectedGuide = guide;
+                showPasswordModal(guide);
+            } else {
+                window.open(guide.file, '_blank');
+            }
+        }
+
+        // Show password modal
+        function showPasswordModal(guide) {
+            const modal = document.getElementById('passwordModal');
+            const modalContent = document.getElementById('modalContent');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalDescription = document.getElementById('modalDescription');
+            const passwordLabel = document.getElementById('passwordLabel');
+            const passwordInput = document.getElementById('passwordInput');
+            const submitBtn = document.getElementById('submitBtn');
+            const cancelBtn = document.getElementById('cancelBtn');
+            const passwordError = document.getElementById('passwordError');
+
+            // Set RTL if needed
+            if (guide.isRTL) {
+                modalContent.classList.add('rtl');
+                modalTitle.textContent = 'תוכן מוגן';
+                modalDescription.textContent = 'מדריך זה מוגן בסיסמה. אנא הזן את קוד הגישה כדי להמשיך.';
+                passwordLabel.textContent = 'קוד גישה';
+                passwordInput.placeholder = 'הזן סיסמה...';
+                submitBtn.textContent = 'אישור';
+                cancelBtn.textContent = 'ביטול';
+                passwordError.textContent = 'סיסמה שגויה. נסה שוב.';
+            } else {
+                modalContent.classList.remove('rtl');
+                modalTitle.textContent = 'Protected Content';
+                modalDescription.textContent = 'This guide is password protected. Please enter the access code to continue.';
+                passwordLabel.textContent = 'Access Code';
+                passwordInput.placeholder = 'Enter password...';
+                submitBtn.textContent = 'Submit';
+                cancelBtn.textContent = 'Cancel';
+                passwordError.textContent = 'Incorrect password. Please try again.';
+            }
+
+            // Clear previous input and errors
+            passwordInput.value = '';
+            passwordError.classList.remove('active');
+            
+            // Show modal
+            modal.classList.add('active');
+            passwordInput.focus();
+        }
+
+        // Close password modal
+        function closePasswordModal() {
+            const modal = document.getElementById('passwordModal');
+            const passwordInput = document.getElementById('passwordInput');
+            const passwordError = document.getElementById('passwordError');
+            
+            modal.classList.remove('active');
+            passwordInput.value = '';
+            passwordError.classList.remove('active');
+            currentProtectedGuide = null;
+        }
+
+        // Verify password and open guide
+        function verifyAndOpenGuide() {
+            const passwordInput = document.getElementById('passwordInput');
+            const passwordError = document.getElementById('passwordError');
+            const enteredPassword = passwordInput.value;
+
+            if (currentProtectedGuide && enteredPassword === currentProtectedGuide.password) {
+                // Password correct - open guide
+                window.open(currentProtectedGuide.file, '_blank');
+                closePasswordModal();
+            } else {
+                // Password incorrect - show error
+                passwordError.classList.add('active');
+                passwordInput.value = '';
+                passwordInput.focus();
+            }
+        }
+
         // Initialize
         renderGuides();
+
+        // Event listeners for password modal
+        document.getElementById('cancelBtn').addEventListener('click', closePasswordModal);
+        document.getElementById('submitBtn').addEventListener('click', verifyAndOpenGuide);
+        
+        // Close modal on overlay click
+        document.getElementById('passwordModal').addEventListener('click', (e) => {
+            if (e.target.id === 'passwordModal') {
+                closePasswordModal();
+            }
+        });
+
+        // Submit on Enter key
+        document.getElementById('passwordInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                verifyAndOpenGuide();
+            }
+        });
     </script>
 </body>
 </html>
