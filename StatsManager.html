@@ -385,9 +385,155 @@
                 font-size: 1em;
             }
         }
+
+        /* Password Protection Overlay */
+        .password-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(10, 14, 39, 0.98);
+            backdrop-filter: blur(10px);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .password-overlay.hidden {
+            display: none;
+        }
+
+        .password-modal {
+            background: white;
+            border-radius: 16px;
+            padding: 3rem;
+            max-width: 450px;
+            width: 90%;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            direction: rtl;
+        }
+
+        .password-modal-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .password-modal-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 1rem;
+        }
+
+        .password-modal-description {
+            color: #718096;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .password-input-wrapper {
+            margin-bottom: 1.5rem;
+        }
+
+        .password-input-wrapper label {
+            display: block;
+            color: #2d3748;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            text-align: right;
+        }
+
+        .password-modal-input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .password-modal-input:focus {
+            outline: none;
+            border-color: #4299e1;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+        }
+
+        .password-error-msg {
+            color: #ef4444;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            display: none;
+            font-weight: 600;
+        }
+
+        .password-error-msg.active {
+            display: block;
+        }
+
+        .password-submit-btn {
+            width: 100%;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .password-submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(66, 153, 225, 0.4);
+        }
+
+        .password-submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .content-wrapper {
+            display: none;
+        }
+
+        .content-wrapper.unlocked {
+            display: block;
+        }
     </style>
 </head>
 <body>
+    <!-- Password Protection Overlay -->
+    <div class="password-overlay" id="passwordOverlay">
+        <div class="password-modal">
+            <div class="password-modal-icon">🔒</div>
+            <h2 class="password-modal-title">תוכן מוגן</h2>
+            <p class="password-modal-description">
+                מדריך זה מוגן בסיסמה. אנא הזן את קוד הגישה כדי להמשיך.
+            </p>
+            <div class="password-input-wrapper">
+                <label for="accessCode">קוד גישה</label>
+                <input 
+                    type="password" 
+                    id="accessCode" 
+                    class="password-modal-input" 
+                    placeholder="הזן סיסמה..."
+                    autocomplete="off"
+                >
+                <div class="password-error-msg" id="passwordError">
+                    ❌ סיסמה שגויה. אנא נסה שוב.
+                </div>
+            </div>
+            <button class="password-submit-btn" id="submitPassword">אישור</button>
+        </div>
+    </div>
+
+    <div class="content-wrapper" id="contentWrapper">
     <div class="container">
         <div class="header">
             <h1>ניהול סטטיסטיקה והכנה למשחק - ליגה לאומית</h1>
@@ -463,5 +609,79 @@
             <p style="margin-top: 10px; font-size: 0.85em;">מערכת ניהול סטטיסטיקה - ליגה לאומית בכדורסל</p>
         </div>
     </div>
+    </div>
+
+    <script>
+        // Password protection
+        const CORRECT_PASSWORD = 'WinnerLeague2025';
+        const SESSION_KEY = 'statsManagerAuth';
+
+        // Check if already authenticated in this session
+        function checkAuth() {
+            const isAuth = sessionStorage.getItem(SESSION_KEY);
+            if (isAuth === 'true') {
+                unlockContent();
+            } else {
+                // Focus on password input
+                document.getElementById('accessCode').focus();
+            }
+        }
+
+        // Verify password
+        function verifyPassword() {
+            const input = document.getElementById('accessCode');
+            const errorMsg = document.getElementById('passwordError');
+            const enteredPassword = input.value;
+
+            if (enteredPassword === CORRECT_PASSWORD) {
+                // Correct password
+                sessionStorage.setItem(SESSION_KEY, 'true');
+                unlockContent();
+            } else {
+                // Wrong password
+                errorMsg.classList.add('active');
+                input.value = '';
+                input.focus();
+                
+                // Shake animation
+                input.style.animation = 'shake 0.5s';
+                setTimeout(() => {
+                    input.style.animation = '';
+                }, 500);
+            }
+        }
+
+        // Unlock content
+        function unlockContent() {
+            const overlay = document.getElementById('passwordOverlay');
+            const wrapper = document.getElementById('contentWrapper');
+            
+            overlay.classList.add('hidden');
+            wrapper.classList.add('unlocked');
+        }
+
+        // Event listeners
+        document.getElementById('submitPassword').addEventListener('click', verifyPassword);
+        
+        document.getElementById('accessCode').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                verifyPassword();
+            }
+        });
+
+        // Add shake animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+                20%, 40%, 60%, 80% { transform: translateX(10px); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Initialize
+        checkAuth();
+    </script>
 </body>
 </html>
