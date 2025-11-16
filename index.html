@@ -556,8 +556,7 @@
                 isRTL: true,
                 buttonText: 'צפה במדריך',
                 dateUpdated: '16 בנובמבר 2025',
-                isProtected: true,
-                password: 'WinnerLeague2025'
+                isProtected: true  // Badge only - actual protection is in the guide itself
             }
         ];
 
@@ -637,10 +636,12 @@
 
         // Handle guide access (protected or direct)
         function handleGuideAccess(guide) {
-            if (guide.isProtected) {
+            if (guide.isProtected && guide.password) {
+                // Only show modal if password is defined
                 currentProtectedGuide = guide;
                 showPasswordModal(guide);
             } else {
+                // Open directly - protection is in the guide itself if needed
                 window.open(guide.file, '_blank');
             }
         }
