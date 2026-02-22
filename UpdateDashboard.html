@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Export and Manage Data in Pixellot CSM Dashboard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #1a202c; background: #f7fafc; padding: 20px; direction: ltr; }
+        .container { max-width: 900px; margin: 0 auto; background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: hidden; }
+        .header { background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%); color: white; padding: 40px; border-bottom: 3px solid #4299e1; }
+        .header h1 { font-size: 2em; margin-bottom: 15px; font-weight: 600; letter-spacing: -0.5px; }
+        .header-meta { display: flex; justify-content: center; gap: 30px; margin-top: 20px; font-size: 0.9em; opacity: 0.85; font-family: 'Courier New', monospace; }
+        .header-meta span { display: flex; align-items: center; gap: 8px; }
+        .content { padding: 40px; }
+        .platform-link { background: #edf2f7; border-left: 3px solid #4299e1; padding: 20px; margin-bottom: 30px; border-radius: 4px; }
+        .platform-link h2 { color: #2d3748; margin-bottom: 8px; font-size: 1.2em; font-weight: 600; }
+        .platform-link a { color: #4299e1; text-decoration: none; font-weight: 500; font-family: 'Courier New', monospace; }
+        .platform-link a:hover { text-decoration: underline; }
+        .step { margin-bottom: 35px; padding-bottom: 35px; border-bottom: 1px solid #e9ecef; }
+        .step:last-child { border-bottom: none; }
+        .step-header { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
+        .step-number { background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%); color: white; width: 40px; height: 40px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 1.1em; flex-shrink: 0; font-family: 'Courier New', monospace; }
+        .step h3 { color: #2d3748; font-size: 1.15em; font-weight: 600; }
+        .step-description { margin: 15px 0; padding: 12px 20px; background: #f7fafc; border-left: 3px solid #cbd5e0; border-radius: 2px; color: #4a5568; }
+        .section-divider { margin: 50px 0; text-align: center; position: relative; }
+        .section-divider::before { content: ''; position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: #cbd5e0; }
+        .section-divider span { background: white; padding: 10px 30px; position: relative; color: #4a5568; font-weight: 600; font-size: 1em; text-transform: uppercase; letter-spacing: 1px; font-family: 'Courier New', monospace; }
+        .footer { background: #edf2f7; padding: 30px; text-align: center; color: #718096; font-size: 0.9em; border-top: 1px solid #e2e8f0; }
+        .footer a { color: #4299e1; text-decoration: none; font-weight: 500; }
+        .footer a:hover { text-decoration: underline; }
+        .back-to-home { text-align: center; margin: 40px 0; padding: 20px 0; }
+        .back-to-home-btn { display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%); color: white; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 1em; transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(66, 153, 225, 0.3); }
+        .back-to-home-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(66, 153, 225, 0.4); }
+        .step-image { width: 100%; max-width: 800px; height: auto; border-radius: 4px; border: 1px solid #e2e8f0; margin-top: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        @media print { body { background: white; padding: 0; } .container { box-shadow: none; } }
+        @media (max-width: 768px) { body { padding: 10px; } .container { border-radius: 0; } .header { padding: 25px 15px; } .header h1 { font-size: 1.4em; } .header-meta { flex-direction: column; gap: 10px; font-size: 0.85em; } .content { padding: 20px 15px; } .platform-link { padding: 15px; margin-bottom: 20px; } .step { margin-bottom: 25px; padding-bottom: 25px; } .step-number { width: 35px; height: 35px; font-size: 1em; } .step h3 { font-size: 1.05em; } .step-description { padding: 10px 15px; font-size: 0.9em; margin: 12px 0; } .section-divider { margin: 35px 0; } .section-divider span { padding: 8px 15px; font-size: 0.85em; } .step-image { margin-top: 12px; } .footer { padding: 20px 15px; font-size: 0.85em; } .back-to-home { margin: 30px 0; padding: 15px 0; } .back-to-home-btn { padding: 10px 25px; font-size: 0.9em; } }
+        @media (max-width: 480px) { body { padding: 5px; } .header { padding: 20px 12px; } .header h1 { font-size: 1.2em; } .content { padding: 15px 12px; } .step-number { width: 32px; height: 32px; font-size: 0.95em; } .step h3 { font-size: 1em; } }
+        .password-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(10, 14, 39, 0.98); backdrop-filter: blur(10px); z-index: 9999; display: flex; align-items: center; justify-content: center; }
+        .password-overlay.hidden { display: none; }
+        .password-modal { background: white; border-radius: 16px; padding: 3rem; max-width: 450px; width: 90%; box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3); text-align: center; }
+        .password-modal-icon { font-size: 4rem; margin-bottom: 1.5rem; }
+        .password-modal-title { font-size: 1.8rem; font-weight: 700; color: #2d3748; margin-bottom: 1rem; }
+        .password-modal-description { color: #718096; margin-bottom: 2rem; line-height: 1.6; }
+        .password-input-wrapper { margin-bottom: 1.5rem; }
+        .password-input-wrapper label { display: block; color: #2d3748; font-weight: 600; margin-bottom: 0.5rem; }
+        .password-modal-input { width: 100%; padding: 1rem; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 1rem; font-family: 'Courier New', monospace; text-align: center; transition: all 0.3s ease; }
+        .password-modal-input:focus { outline: none; border-color: #4299e1; box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1); }
+        .password-error-msg { color: #ef4444; font-size: 0.875rem; margin-top: 0.5rem; display: none; font-weight: 600; }
+        .password-error-msg.active { display: block; }
+        .password-submit-btn { width: 100%; padding: 1rem 2rem; background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%); color: white; border: none; border-radius: 8px; font-weight: 700; font-size: 1rem; cursor: pointer; transition: all 0.3s ease; margin-top: 1rem; }
+        .password-submit-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(66, 153, 225, 0.4); }
+        .password-submit-btn:active { transform: translateY(0); }
+        .content-wrapper { display: none; }
+        .content-wrapper.unlocked { display: block; }
+    </style>
+</head>
+<body>
+    <div class="password-overlay" id="passwordOverlay">
+        <div class="password-modal">
+            <div class="password-modal-icon">&#128274;</div>
+            <h2 class="password-modal-title">Protected Content</h2>
+            <p class="password-modal-description">This guide is password protected. Please enter the access code to continue.</p>
+            <div class="password-input-wrapper">
+                <label for="accessCode">Access Code</label>
+                <input type="password" id="accessCode" class="password-modal-input" placeholder="Enter password..." autocomplete="off">
+                <div class="password-error-msg" id="passwordError">Incorrect password. Please try again.</div>
+            </div>
+            <button class="password-submit-btn" id="submitPassword">Submit</button>
+        </div>
+    </div>
+
+    <div class="content-wrapper" id="contentWrapper">
+    <div class="container">
+        <div class="header">
+            <h1>Export and Manage Data in Pixellot CSM Dashboard</h1>
+            <div class="header-meta">
+                <span>Creation Date: February 22, 2026</span>
+                <span>Created By: Uri Roiz</span>
+            </div>
+        </div>
+        <div class="content">
+            <div class="platform-link">
+                <h2>View on Tango</h2>
+                <a href="https://app.tango.us/app/workflow/490ff2ef-1c79-43f1-9558-e889bf56926a?utm_source=magicCopy&amp;utm_medium=magicCopy&amp;utm_campaign=workflow%20export%20links" target="_blank">View most recent version on Tango.ai</a>
+            </div>
+
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">1</div>
+                    <h3>Open Customer Dashboard on PowerBI</h3>
+                </div>
+                <div class="step-description">Click on Reset filters, slicers, and other data view changes you've made.</div>
+                <img src="https://images.tango.us/workflows/490ff2ef-1c79-43f1-9558-e889bf56926a/steps/2c30ee94-fbe6-457d-9878-f09db37df6f9/a9ab7d88-0ae3-4228-be9a-452616d2d6e9.png?fm=png&amp;crop=focalpoint&amp;fit=crop&amp;fp-x=0.8410&amp;fp-y=0.0720&amp;fp-z=2.8507&amp;w=1200&amp;border=2%2CF4F2F7&amp;border-radius=8%2C8%2C8%2C8&amp;border-radius-inner=8%2C8%2C8%2C8&amp;blend-align=bottom&amp;blend-mode=normal&amp;blend-x=0&amp;blend-w=1200&amp;blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&amp;mark-x=603&amp;mark-y=98&amp;m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0xMDcmaD0xMDcmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" alt="Open Customer Dashboard on PowerBI" class="step-image">
+            </div>
+
+            <div class="step">
+                <div class="step-header"><div class="step-number">2</div><h3>Click on Reset</h3></div>
+                <img src="https://images.tango.us/workflows/490ff2ef-1c79-43f1-9558-e889bf56926a/steps/f2c6ac07-ab28-4d77-be16-ad96eb44cc98/832b5333-0fd4-4f8d-a5d6-17fcededfe35.png?fm=png&amp;crop=focalpoint&amp;fit=crop&amp;fp-x=0.5801&amp;fp-y=0.5513&amp;fp-z=2.8627&amp;w=1200&amp;border=2%2CF4F2F7&amp;border-radius=8%2C8%2C8%2C8&amp;border-radius-inner=8%2C8%2C8%2C8&amp;blend-align=bottom&amp;blend-mode=normal&amp;blend-x=0&amp;blend-w=1200&amp;blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&amp;mark-x=515&amp;mark-y=323&amp;m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0xNjkmaD04OSZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" alt="Click on Reset" class="step-image">
+            </div>
+            <div class="step">
+                <div class="step-header"><div class="step-number">3</div><h3>Click on tenant</h3></div>
+                <img src="https://images.tango.us/workflows/490ff2ef-1c79-43f1-9558-e889bf56926a/steps/d7c5e04d-1dce-4e32-a586-f6e64131b03b/ed02c177-12ee-400b-ac8c-ac66f14d61f1.png?fm=png&amp;crop=focalpoint&amp;fit=crop&amp;fp-x=0.3517&amp;fp-y=0.4646&amp;fp-z=2.5085&amp;w=1200&amp;border=2%2CF4F2F7&amp;border-radius=8%2C8%2C8%2C8&amp;border-radius-inner=8%2C8%2C8%2C8&amp;blend-align=bottom&amp;blend-mode=normal&amp;blend-x=0&amp;blend-w=1200&amp;blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&amp;mark-x=452&amp;mark-y=341&amp;m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0yOTcmaD01NSZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" alt="Click on tenant" class="step-image">
+            </div>
+            <div class="step">
+                <div class="step-header"><div class="step-number">4</div><h3>Select the relevant Tenant</h3></div>
+                <div class="step-description">e.g. topHockeyLeague</div>
+                <img src="https://images.tango.us/workflows/490ff2ef-1c79-43f1-9558-e889bf56926a/steps/06636ac8-7763-4588-8182-e0d56b0757a7/2d8e1f63-f2cd-41f2-bfa9-8bf615b1f817.png?fm=png&amp;crop=focalpoint&amp;fit=crop&amp;fp-x=0.3602&amp;fp-y=0.4847&amp;fp-z=2.6283&amp;w=1200&amp;border=2%2CF4F2F7&amp;border-radius=8%2C8%2C8%2C8&amp;border-radius-inner=8%2C8%2C8%2C8&amp;blend-align=bottom&amp;blend-mode=normal&amp;blend-x=0&amp;blend-w=1200&amp;blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&amp;mark-x=473&amp;mark-y=350&amp;m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0yNTQmaD0zNyZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" alt="Select the relevant Tenant" class="step-image">
+            </div>
+            <div class="step">
+                <div class="step-header"><div class="step-number">5</div><h3>Click on topHockeyLeague</h3></div>
+                <img src="https://images.tango.us/workflows/490ff2ef-1c79-43f1-9558-e889bf56926a/steps/86c842c4-4495-47d8-a38e-1f7a9205f4dd/a3baa395-537c-49db-bf43-c6d63142df53.png?fm=png&amp;crop=focalpoint&amp;fit=crop&amp;fp-x=0.3520&amp;fp-y=0.5053&amp;fp-z=2.5126&amp;w=1200&amp;border=2%2CF4F2F7&amp;border-radius=8%2C8%2C8%2C8&amp;border-radius-inner=8%2C8%2C8%2C8&amp;blend-align=bottom&amp;blend-mode=normal&amp;blend-x=0&amp;blend-w=1200&amp;blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&amp;mark-x=452&amp;mark-y=342&amp;m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0yOTUmaD01MyZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" alt="Click on topHockeyLeague" class="step-image">
+            </div>
+            <div class="step">
+                <div class="step-header"><div class="step-number">6</div><h3>Set Event Date to Last 2 Calendar Years</h3></div>
+                <img src="https://images.tango.us/workflows/490ff2ef-1c79-43f1-9558-e889bf56926a/steps/4a6feea2-4481-435d-b407-7fe8bc68a081/76c8f1f5-4e07-4b8d-a07b-78ec87fac225.png?fm=png&amp;crop=focalpoint&amp;fit=crop&amp;fp-x=0.1924&amp;fp-y=0.2550&amp;fp-z=3.0021&amp;w=1200&amp;border=2%2CF4F2F7&amp;border-radius=8%2C8%2C8%2C8&amp;border-radius-inner=8%2C8%2C8%2C8&amp;blend-align=bottom&amp;blend-mode=normal&amp;blend-x=0&amp;blend-w=1200&amp;blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&amp;mark-x=540&amp;mark-y=333&amp;m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0xMTkmaD03MCZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" alt="Set Event Date to Last 2 Calendar Years" class="step-image">
+            </div>
+            <div class="step">
+                <div class="step-header"><div class="step-number">7</div><h3>Click on Last</h3></div>
+                <img src="https://images.tango.us/workflows/490ff2ef-1c79-43f1-9558-e889bf56926a/steps/339d66a5-6ec9-4fef-b786-7c02ffc59b05/79caebd2-33bc-4b19-b154-284ba99e66d8.png?fm=png&amp;crop=focalpoint&amp;fit=crop&amp;fp-x=0.2025&amp;fp-y=0.2873&amp;fp-z=2.9392&amp;w=1200&amp;border=2%2CF4F2F7&amp;border-radius=8%2C8%2C8%2C8&amp;border-radius-inner=8%2C8%2C8%2C8&amp;blend-align=bottom&amp;blend-mode=normal&amp;blend-x=0&amp;blend-w=1200&amp;blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&amp;mark-x=529&amp;mark-y=335&amp;m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0xNDImaD02NiZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" alt="Click on Last" class="step-image">
+            </div>
+            <div class="step">
+                <div class="step-header"><div class="step-number">8</div><h3>Type "2"</h3></div>
+                <img src="https://images.tango.us/workflows/490ff2ef-1c79-43f1-9558-e889bf56926a/steps/81709f0b-ba7e-409e-a1c6-ffe7678d6e0b/3183ee0c-29d0-4def-a051-71cd5d22128d.png?fm=png&amp;crop=focalpoint&amp;fit=crop&amp;fp-x=0.2206&amp;fp-y=0.2556&amp;fp-z=3.0048&amp;w=1200&amp;border=2%2CF4F2F7&amp;border-radius=8%2C8%2C8%2C8&amp;border-radius-inner=8%2C8%2C8%2C8&amp;blend-align=bottom&amp;blend-mode=normal&amp;blend-x=0&amp;blend-w=1200&amp;blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&amp;mark-x=556&amp;mark-y=332&amp;m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz04OSZoPTczJmZpdD1jcm9wJmNvcm5lci1yYWRpdXM9MTA%3D" alt="Type 2" class="step-image">
+            </div>
+            <div class="step">
+                <div class="step-header"><div class="step-number">9</div><h3>Click on Months</h3></div>
+                <img src="https://images.tango.us/workflows/490ff2ef-1c79-43f1-9558-e889bf56926a/steps/7e765f0d-f10f-4e66-baa7-3b34555e6c4b/dac5fa67-2720-48e2-b801-702d91990d33.png?fm=png&amp;crop=focalpoint&amp;fit=crop&amp;fp-x=0.2567&amp;fp-y=0.2550&amp;fp-z=2.8364&amp;w=1200&amp;border=2%2CF4F2F7&amp;border-radius=8%2C8%2C8%2C8&amp;border-radius-inner=8%2C8%2C8%2C8&amp;blend-align=bottom&amp;blend-mode=normal&amp;blend-x=0&amp;blend-w=1200&amp;blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&amp;mark-x=511&amp;mark-y=335&amp;m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0xNzkmaD02NiZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" alt="Click on Months" class="step-image">
+            </div>
+            <div class="step">
+                <div class="step-header"><div class="step-number">10</div><h3>Click on Years (Calendar)</h3></div>
+                <img src="https://images.tango.us/workflows/490ff2ef-1c79-43f1-9558-e889bf56926a/steps/29bf0a42-38a4-45a1-a4cb-332b3c81dfa0/16affa90-3c36-4d85-a9b0-6144a50ac60c.png?fm=png&amp;crop=focalpoint&amp;fit=crop&amp;fp-x=0.2722&amp;fp-y=0.4926&amp;fp-z=2.6974&amp;w=1200&amp;border=2%2CF4F2F7&amp;border-radius=8%2C8%2C8%2C8&amp;border-radius-inner=8%2C8%2C8%2C8&amp;blend-align=bottom&amp;blend-mode=normal&amp;blend-x=0&amp;blend-w=1200&amp;blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&amp;mark-x=486&amp;mark-y=337&amp;m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0yMjkmaD02MSZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" alt="Click on Years (Calendar)" class="step-image">
+            </div>
+            <div class="step">
+                <div class="step-header"><div class="step-number">11</div><h3>Set Event Dates for the first year</h3></div>
+                <div class="step-description">1/1/2024 - 31/12/2024</div>
+                <img src="https://images.tango.us/workflows/490ff2ef-1c79-43f1-9558-e889bf56926a/steps/dc4f83b8-87f7-46e4-a8d7-504b7a74a46b/5b45c5c6-92bc-49cb-aac8-80fc116e6dda.png?fm=png&amp;crop=focalpoint&amp;fit=crop&amp;fp-x=0.2839&amp;fp-y=0.3413&amp;fp-z=3.0048&amp;w=1200&amp;border=2%2CF4F2F7&amp;border-radius=8%2C8%2C8%2C8&amp;border-radius-inner=8%2C8%2C8%2C8&amp;blend-align=bottom&amp;blend-mode=normal&amp;blend-x=0&amp;blend-w=1200&amp;blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&amp;mark-x=571&amp;mark-y=332&amp;m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz01OCZoPTczJmZpdD1jcm9wJmNvcm5lci1yYWRpdXM9MTA%3D" alt="Set Event Dates for the first year" class="step-image">
+            </div>
+            <div class="step">
+                <div class="step-header"><div class="step-number">12</div><h3>Click on December 2025</h3></div>
+                <img src="https://images.tango.us/workflows/490ff2ef-1c79-43f1-9558-e889bf56926a/steps/9240c11b-112f-4052-9dad-78a4181886bd/9dc553b5-4b2a-4066-aa36-403404d67350.png?fm=png&amp;crop=focalpoint&amp;fit=crop&amp;fp-x=0.2761&amp;fp-y=0.3852&amp;fp-z=2.7164&amp;w=1200&amp;border=2%2CF4F2F7&amp;border-radius=8%2C8%2C8%2C8&amp;border-radius-inner=8%2C8%2C8%2C8&amp;blend-align=bottom&amp;blend-mode=normal&amp;blend-x=0&amp;blend-w=1200&amp;blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&amp;mark-x=489&amp;mark-y=330&amp;m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0yMjImaD03NiZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" alt="Click on December 2025" class="step-image">
+            </div>
+            <div class="step">
+                <div class="step-header"><div class="step-number">13</div><h3>Click on Previous year</h3></div>
+                <img src="https://images.tango.us/workflows/490ff2ef-1c79-43f1-9558-e889bf56926a/steps/75f0d797-140e-44ab-9b51-093b15a5524e/037e42a9-78fc-48e5-af28-647e4f1d74ca.png?fm=png&amp;crop=focalpoint&amp;fit=crop&amp;fp-x=0.3602&amp;fp-y=0.3852&amp;fp-z=2.9577&amp;w=1200&amp;border=2%2CF4F2F7&amp;border-radius=8%2C8%2C8%2C8&amp;border-radius-inner=8%2C8%2C8%2C8&amp;blend-align=bottom&amp;blend-mode=normal&amp;blend-x=0&amp;blend-w=1200&amp;blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&amp;mark-x=559&amp;mark-y=326&amp;m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz04MyZoPTgzJmZpdD1jcm9wJmNvcm5lci1yYWRpdXM9MTA%3D" alt="Click on Previous year" class="step-image">
+            </div>
+            <div class="step">
+                <div class="step-header"><div class="step-number">14</div><h3>Select a date</h3></div>
+                <img src="https://images.tango.us/workflows/490ff2ef-1c79-43f1-9558-e889bf56926a/steps/a1dd786d-5cd0-4ed6-8188-e41802142e24/8398cfeb-8790-43bb-8af9-816f7e315a39.png?fm=png&amp;crop=focalpoint&amp;fit=crop&amp;fp-x=0.3744&amp;fp-y=0.5503&amp;fp-z=2.8855&amp;w=1200&amp;border=2%2CF4F2F7&amp;border-radius=8%2C8%2C8%2C8&amp;border-radius-inner=8%2C8%2C8%2C8&amp;blend-align=bottom&amp;blend-mode=normal&amp;blend-x=0&amp;blend-w=1200&amp;blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&amp;mark-x=551&amp;mark-y=319&amp;m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz05OSZoPTk5JmZpdD1jcm9wJmNvcm5lci1yYWRpdXM9MTA%3D" alt="Select a date" class="step-image">
+            </div>
+            <div class="step">
+                <div class="step-header"><div class="step-number">15</div><h3>Click on is Test</h3></div>
+                <div class="step-description">Select "REAL EVENTS"</div>
+                <img src="https://images.tango.us/workflows/490ff2ef-1c79-43f1-9558-e889bf56926a/steps/f6b984cb-ef16-44ee-bd5f-5e17ae5b055c/ea7ab139-0ffa-4d1f-a688-f62ac73042c6.png?fm=png&amp;crop=focalpoint&amp;fit=crop&amp;fp-x=0.2829&amp;fp-y=0.6910&amp;fp-z=2.6740&amp;w=1200&amp;border=2%2CF4F2F7&amp;border-radius=8%2C8%2C8%2C8&amp;border-radius-inner=8%2C8%2C8%2C8&amp;blend-align=bottom&amp;blend-mode=normal&amp;blend-x=0&amp;blend-w=1200&amp;blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&amp;mark-x=481&amp;mark-y=339&amp;m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0yMzcmaD01OCZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" alt="Click on is Test" class="step-image">
+            </div>
+            <div class="step">
+                <div class="step-header"><div class="step-number">16</div><h3>Click on More options</h3></div>
+                <img src="https://images.tango.us/workflows/490ff2ef-1c79-43f1-9558-e889bf56926a/steps/9ceb3986-5ab6-4758-898a-78c3f0e2e4b9/e1c8fd99-b67a-4be1-87dd-7c29967c40e6.png?fm=png&amp;crop=focalpoint&amp;fit=crop&amp;fp-x=0.9747&amp;fp-y=0.3132&amp;fp-z=3.0533&amp;w=1200&amp;border=2%2CF4F2F7&amp;border-radius=8%2C8%2C8%2C8&amp;border-radius-inner=8%2C8%2C8%2C8&amp;blend-align=bottom&amp;blend-mode=normal&amp;blend-x=0&amp;blend-w=1200&amp;blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&amp;mark-x=1072&amp;mark-y=337&amp;m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz03MSZoPTYyJmZpdD1jcm9wJmNvcm5lci1yYWRpdXM9MTA%3D" alt="Click on More options" class="step-image">
+            </div>
+            <div class="step">
+                <div class="step-header"><div class="step-number">17</div><h3>Click on Export data</h3></div>
+                <img src="https://images.tango.us/workflows/490ff2ef-1c79-43f1-9558-e889bf56926a/steps/6ecd5ee8-4f98-4f9f-b232-f880ec4785a8/fc2df1b4-a33e-4228-b780-41fe5a7409ba.png?fm=png&amp;crop=focalpoint&amp;fit=crop&amp;fp-x=0.9036&amp;fp-y=0.4381&amp;fp-z=2.9952&amp;w=1200&amp;border=2%2CF4F2F7&amp;border-radius=8%2C8%2C8%2C8&amp;border-radius-inner=8%2C8%2C8%2C8&amp;blend-align=bottom&amp;blend-mode=normal&amp;blend-x=0&amp;blend-w=1200&amp;blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&amp;mark-x=617&amp;mark-y=331&amp;m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz00NzMmaD03NSZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" alt="Click on Export data" class="step-image">
+            </div>
+            <div class="step">
+                <div class="step-header"><div class="step-number">18</div><h3>Click on File format</h3></div>
+                <img src="https://images.tango.us/workflows/490ff2ef-1c79-43f1-9558-e889bf56926a/steps/2da95582-60f9-47b1-ba3f-3380a1a919e2/6e7b56bb-5c18-43a4-9eac-bf0b1e51fc2b.png?fm=png&amp;crop=focalpoint&amp;fit=crop&amp;fp-x=0.4147&amp;fp-y=0.6825&amp;fp-z=1.9018&amp;w=1200&amp;border=2%2CF4F2F7&amp;border-radius=8%2C8%2C8%2C8&amp;border-radius-inner=8%2C8%2C8%2C8&amp;blend-align=bottom&amp;blend-mode=normal&amp;blend-x=0&amp;blend-w=1200&amp;blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&amp;mark-x=342&amp;mark-y=338&amp;m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz01MTUmaD01OSZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" alt="Click on File format" class="step-image">
+            </div>
+            <div class="step">
+                <div class="step-header"><div class="step-number">19</div><h3>Click on .csv (30,000-row max)</h3></div>
+                <img src="https://images.tango.us/workflows/490ff2ef-1c79-43f1-9558-e889bf56926a/steps/3094fa84-608c-4417-8ff1-e35ee2699882/2a50aae9-b649-4de7-b2de-e1c359efe00d.png?fm=png&amp;crop=focalpoint&amp;fit=crop&amp;fp-x=0.5003&amp;fp-y=0.7841&amp;fp-z=1.4344&amp;w=1200&amp;border=2%2CF4F2F7&amp;border-radius=8%2C8%2C8%2C8&amp;border-radius-inner=8%2C8%2C8%2C8&amp;blend-align=bottom&amp;blend-mode=normal&amp;blend-x=0&amp;blend-w=1200&amp;blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&amp;mark-x=258&amp;mark-y=486&amp;m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz02ODQmaD00NSZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" alt="Click on .csv (30,000-row max)" class="step-image">
+            </div>
+            <div class="step">
+                <div class="step-header"><div class="step-number">20</div><h3>Click on Export</h3></div>
+                <div class="step-description">A CSV file will be downloaded to your PC - rename it: 2024.csv</div>
+                <img src="https://images.tango.us/workflows/490ff2ef-1c79-43f1-9558-e889bf56926a/steps/9081477a-3388-465d-8d2d-cdeb312481af/0fc19cee-cbe4-4b60-a0dd-4e70693e0fc8.png?fm=png&amp;crop=focalpoint&amp;fit=crop&amp;fp-x=0.6171&amp;fp-y=0.7661&amp;fp-z=2.8841&amp;w=1200&amp;border=2%2CF4F2F7&amp;border-radius=8%2C8%2C8%2C8&amp;border-radius-inner=8%2C8%2C8%2C8&amp;blend-align=bottom&amp;blend-mode=normal&amp;blend-x=0&amp;blend-w=1200&amp;blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&amp;mark-x=519&amp;mark-y=319&amp;m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0xNjImaD05OSZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" alt="Click on Export" class="step-image">
+            </div>
+            <div class="step">
+                <div class="step-header"><div class="step-number">21</div><h3>Set Event Date viewer to 2025</h3></div>
+                <div class="step-description">1/1/2024 - 31/12/2024</div>
+                <img src="https://images.tango.us/workflows/490ff2ef-1c79-43f1-9558-e889bf56926a/steps/d07bd890-7f7d-4ba5-8b59-8dbc494de3bf/6f2b1ed2-818b-46aa-9aac-071f68e5b8e4.png?fm=png&amp;crop=focalpoint&amp;fit=crop&amp;fp-x=0.2839&amp;fp-y=0.3413&amp;fp-z=3.0048&amp;w=1200&amp;border=2%2CF4F2F7&amp;border-radius=8%2C8%2C8%2C8&amp;border-radius-inner=8%2C8%2C8%2C8&amp;blend-align=bottom&amp;blend-mode=normal&amp;blend-x=0&amp;blend-w=1200&amp;blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&amp;mark-x=571&amp;mark-y=332&amp;m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz01OCZoPTczJmZpdD1jcm9wJmNvcm5lci1yYWRpdXM9MTA%3D" alt="Set Event Date viewer to 2025" class="step-image">
+            </div>
+            <div class="step">
+                <div class="step-header"><div class="step-number">22</div><h3>Click on December 2024</h3></div>
+                <img src="https://images.tango.us/workflows/490ff2ef-1c79-43f1-9558-e889bf56926a/steps/4dc02940-8d2f-449f-8158-1cad14269c65/b04c6f7d-fa8f-48ca-8497-412061ac376e.png?fm=png&amp;crop=focalpoint&amp;fit=crop&amp;fp-x=0.2761&amp;fp-y=0.3852&amp;fp-z=2.7164&amp;w=1200&amp;border=2%2CF4F2F7&amp;border-radius=8%2C8%2C8%2C8&amp;border-radius-inner=8%2C8%2C8%2C8&amp;blend-align=bottom&amp;blend-mode=normal&amp;blend-x=0&amp;blend-w=1200&amp;blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&amp;mark-x=489&amp;mark-y=330&amp;m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0yMjImaD03NiZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" alt="Click on December 2024" class="step-image">
+            </div>
+            <div class="step">
+                <div class="step-header"><div class="step-number">23</div><h3>Click on Next year</h3></div>
+                <img src="https://images.tango.us/workflows/490ff2ef-1c79-43f1-9558-e889bf56926a/steps/75a08e25-c60c-434c-848b-847b41b251e2/45bf6c0b-51e3-4bb7-ae85-74e8e21ac4d7.png?fm=png&amp;crop=focalpoint&amp;fit=crop&amp;fp-x=0.3783&amp;fp-y=0.3852&amp;fp-z=2.9577&amp;w=1200&amp;border=2%2CF4F2F7&amp;border-radius=8%2C8%2C8%2C8&amp;border-radius-inner=8%2C8%2C8%2C8&amp;blend-align=bottom&amp;blend-mode=normal&amp;blend-x=0&amp;blend-w=1200&amp;blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&amp;mark-x=559&amp;mark-y=326&amp;m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz04MyZoPTgzJmZpdD1jcm9wJmNvcm5lci1yYWRpdXM9MTA%3D" alt="Click on Next year" class="step-image">
+            </div>
+            <div class="step">
+                <div class="step-header"><div class="step-number">24</div><h3>Open date picker</h3></div>
+                <img src="https://images.tango.us/workflows/490ff2ef-1c79-43f1-9558-e889bf56926a/steps/a1fb37f9-b0ea-44f0-bf30-490df828a5d1/58df801f-0be1-404e-bbc2-4cc74686f39a.png?fm=png&amp;crop=focalpoint&amp;fit=crop&amp;fp-x=0.3744&amp;fp-y=0.5503&amp;fp-z=2.8855&amp;w=1200&amp;border=2%2CF4F2F7&amp;border-radius=8%2C8%2C8%2C8&amp;border-radius-inner=8%2C8%2C8%2C8&amp;blend-align=bottom&amp;blend-mode=normal&amp;blend-x=0&amp;blend-w=1200&amp;blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&amp;mark-x=551&amp;mark-y=319&amp;m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz05OSZoPTk5JmZpdD1jcm9wJmNvcm5lci1yYWRpdXM9MTA%3D" alt="Open date picker" class="step-image">
+            </div>
+            <div class="step">
+                <div class="step-header"><div class="step-number">25</div><h3>Click on January 2024</h3></div>
+                <img src="https://images.tango.us/workflows/490ff2ef-1c79-43f1-9558-e889bf56926a/steps/a6e6c801-6517-4f49-a2c9-146e24c4c54f/934086bb-860b-447d-bd76-bc15cdd48d45.png?fm=png&amp;crop=focalpoint&amp;fit=crop&amp;fp-x=0.2132&amp;fp-y=0.3852&amp;fp-z=2.7952&amp;w=1200&amp;border=2%2CF4F2F7&amp;border-radius=8%2C8%2C8%2C8&amp;border-radius-inner=8%2C8%2C8%2C8&amp;blend-align=bottom&amp;blend-mode=normal&amp;blend-x=0&amp;blend-w=1200&amp;blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&amp;mark-x=503&amp;mark-y=329&amp;m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0xOTQmaD03OCZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" alt="Click on January 2024" class="step-image">
+            </div>
+            <div class="step">
+                <div class="step-header"><div class="step-number">26</div><h3>Click on Next year</h3></div>
+                <img src="https://images.tango.us/workflows/490ff2ef-1c79-43f1-9558-e889bf56926a/steps/80a44265-0820-4274-b581-7cd2cdffa455/094f396d-5dd7-457f-9c66-7099f55372e1.png?fm=png&amp;crop=focalpoint&amp;fit=crop&amp;fp-x=0.3206&amp;fp-y=0.3852&amp;fp-z=2.9577&amp;w=1200&amp;border=2%2CF4F2F7&amp;border-radius=8%2C8%2C8%2C8&amp;border-radius-inner=8%2C8%2C8%2C8&amp;blend-align=bottom&amp;blend-mode=normal&amp;blend-x=0&amp;blend-w=1200&amp;blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&amp;mark-x=559&amp;mark-y=326&amp;m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz04MyZoPTgzJmZpdD1jcm9wJmNvcm5lci1yYWRpdXM9MTA%3D" alt="Click on Next year" class="step-image">
+            </div>
+            <div class="step">
+                <div class="step-header"><div class="step-number">27</div><h3>Select a date</h3></div>
+                <img src="https://images.tango.us/workflows/490ff2ef-1c79-43f1-9558-e889bf56926a/steps/cc317585-afc7-4dd7-aaca-7dd5e7851574/5c342880-b6e6-4148-a730-b5e0286aabd9.png?fm=png&amp;crop=focalpoint&amp;fit=crop&amp;fp-x=0.1999&amp;fp-y=0.4233&amp;fp-z=2.8855&amp;w=1200&amp;border=2%2CF4F2F7&amp;border-radius=8%2C8%2C8%2C8&amp;border-radius-inner=8%2C8%2C8%2C8&amp;blend-align=bottom&amp;blend-mode=normal&amp;blend-x=0&amp;blend-w=1200&amp;blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&amp;mark-x=551&amp;mark-y=319&amp;m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz05OSZoPTk5JmZpdD1jcm9wJmNvcm5lci1yYWRpdXM9MTA%3D" alt="Select a date" class="step-image">
+            </div>
+            <div class="step">
+                <div class="step-header"><div class="step-number">28</div><h3>Click on Real Event</h3></div>
+                <img src="https://images.tango.us/workflows/490ff2ef-1c79-43f1-9558-e889bf56926a/steps/0fbb761b-d30c-4755-b2c1-123e753041dc/c081cbf8-1ba6-49e5-bffa-f4516b9cfd80.png?fm=png&amp;crop=focalpoint&amp;fit=crop&amp;fp-x=0.2833&amp;fp-y=0.5201&amp;fp-z=2.6786&amp;w=1200&amp;border=2%2CF4F2F7&amp;border-radius=8%2C8%2C8%2C8&amp;border-radius-inner=8%2C8%2C8%2C8&amp;blend-align=bottom&amp;blend-mode=normal&amp;blend-x=0&amp;blend-w=1200&amp;blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&amp;mark-x=482&amp;mark-y=340&amp;m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0yMzYmaD01NiZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" alt="Click on Real Event" class="step-image">
+            </div>
+            <div class="step">
+                <div class="step-header"><div class="step-number">29</div><h3>Click on Report pages</h3></div>
+                <img src="https://images.tango.us/workflows/490ff2ef-1c79-43f1-9558-e889bf56926a/steps/7df77cb3-664e-4d26-98dc-7ba50b8c05b0/cae66241-3f34-49ea-a00d-f0df99b958a3.png?fm=png&amp;crop=focalpoint&amp;fit=crop&amp;fp-x=0.1045&amp;fp-y=0.5127&amp;fp-z=1.0488&amp;w=1200&amp;border=2%2CF4F2F7&amp;border-radius=8%2C8%2C8%2C8&amp;border-radius-inner=8%2C8%2C8%2C8&amp;blend-align=bottom&amp;blend-mode=normal&amp;blend-x=0&amp;blend-w=1200&amp;blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&amp;mark-x=52&amp;mark-y=8&amp;m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0xNTgmaD03MjAmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" alt="Click on Report pages" class="step-image">
+            </div>
+            <div class="step">
+                <div class="step-header"><div class="step-number">30</div><h3>Click on More options</h3></div>
+                <img src="https://images.tango.us/workflows/490ff2ef-1c79-43f1-9558-e889bf56926a/steps/ef64760d-e912-4269-9501-1bbd113ed093/a933116d-8567-40b9-a155-c652a4996139.png?fm=png&amp;crop=focalpoint&amp;fit=crop&amp;fp-x=0.9747&amp;fp-y=0.3132&amp;fp-z=3.0533&amp;w=1200&amp;border=2%2CF4F2F7&amp;border-radius=8%2C8%2C8%2C8&amp;border-radius-inner=8%2C8%2C8%2C8&amp;blend-align=bottom&amp;blend-mode=normal&amp;blend-x=0&amp;blend-w=1200&amp;blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&amp;mark-x=1072&amp;mark-y=337&amp;m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz03MSZoPTYyJmZpdD1jcm9wJmNvcm5lci1yYWRpdXM9MTA%3D" alt="Click on More options" class="step-image">
+            </div>
+            <div class="step">
+                <div class="step-header"><div class="step-number">31</div><h3>Click on Export data</h3></div>
+                <img src="https://images.tango.us/workflows/490ff2ef-1c79-43f1-9558-e889bf56926a/steps/3210c9ac-552e-4782-8c1c-bc8764ef327b/e6488b93-1fba-4abc-8551-3c8f5d401d6f.png?fm=png&amp;crop=focalpoint&amp;fit=crop&amp;fp-x=0.9036&amp;fp-y=0.4381&amp;fp-z=2.9952&amp;w=1200&amp;border=2%2CF4F2F7&amp;border-radius=8%2C8%2C8%2C8&amp;border-radius-inner=8%2C8%2C8%2C8&amp;blend-align=bottom&amp;blend-mode=normal&amp;blend-x=0&amp;blend-w=1200&amp;blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&amp;mark-x=617&amp;mark-y=331&amp;m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz00NzMmaD03NSZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" alt="Click on Export data" class="step-image">
+            </div>
+            <div class="step">
+                <div class="step-header"><div class="step-number">32</div><h3>Click on File format</h3></div>
+                <img src="https://images.tango.us/workflows/490ff2ef-1c79-43f1-9558-e889bf56926a/steps/d990ff8c-e2a9-4967-9ecb-9ea19a4bdbb3/dcf2080d-5502-4b8f-9306-391a6bc6fb9b.png?fm=png&amp;crop=focalpoint&amp;fit=crop&amp;fp-x=0.4147&amp;fp-y=0.6825&amp;fp-z=1.9018&amp;w=1200&amp;border=2%2CF4F2F7&amp;border-radius=8%2C8%2C8%2C8&amp;border-radius-inner=8%2C8%2C8%2C8&amp;blend-align=bottom&amp;blend-mode=normal&amp;blend-x=0&amp;blend-w=1200&amp;blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&amp;mark-x=342&amp;mark-y=338&amp;m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz01MTUmaD01OSZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" alt="Click on File format" class="step-image">
+            </div>
+            <div class="step">
+                <div class="step-header"><div class="step-number">33</div><h3>Click on .csv (30,000-row max)</h3></div>
+                <img src="https://images.tango.us/workflows/490ff2ef-1c79-43f1-9558-e889bf56926a/steps/db0ba51d-56c2-4bc8-a1e5-a38df5b2d984/02cf4fad-fa4a-4c35-b260-a6bb746edc68.png?fm=png&amp;crop=focalpoint&amp;fit=crop&amp;fp-x=0.5003&amp;fp-y=0.7841&amp;fp-z=1.4344&amp;w=1200&amp;border=2%2CF4F2F7&amp;border-radius=8%2C8%2C8%2C8&amp;border-radius-inner=8%2C8%2C8%2C8&amp;blend-align=bottom&amp;blend-mode=normal&amp;blend-x=0&amp;blend-w=1200&amp;blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&amp;mark-x=258&amp;mark-y=486&amp;m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz02ODQmaD00NSZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" alt="Click on .csv (30,000-row max)" class="step-image">
+            </div>
+            <div class="step">
+                <div class="step-header"><div class="step-number">34</div><h3>Click on Export</h3></div>
+                <div class="step-description">Rename the exported file: 2025.csv</div>
+                <img src="https://images.tango.us/workflows/490ff2ef-1c79-43f1-9558-e889bf56926a/steps/e3d37ebb-20ed-4c78-b44a-cb17979e2cb6/1caba505-410f-40d9-8f93-1a5bb71c57a2.png?fm=png&amp;crop=focalpoint&amp;fit=crop&amp;fp-x=0.6171&amp;fp-y=0.7661&amp;fp-z=2.8841&amp;w=1200&amp;border=2%2CF4F2F7&amp;border-radius=8%2C8%2C8%2C8&amp;border-radius-inner=8%2C8%2C8%2C8&amp;blend-align=bottom&amp;blend-mode=normal&amp;blend-x=0&amp;blend-w=1200&amp;blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&amp;mark-x=519&amp;mark-y=319&amp;m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0xNjImaD05OSZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" alt="Click on Export" class="step-image">
+            </div>
+            <div class="step">
+                <div class="step-header"><div class="step-number">35</div><h3>Click on Last</h3></div>
+                <img src="https://images.tango.us/workflows/490ff2ef-1c79-43f1-9558-e889bf56926a/steps/896c80ee-c625-4230-96bd-396bfcad7351/ea7c463c-6535-4016-9462-9bc5698ad525.png?fm=png&amp;crop=focalpoint&amp;fit=crop&amp;fp-x=0.1924&amp;fp-y=0.2550&amp;fp-z=3.0021&amp;w=1200&amp;border=2%2CF4F2F7&amp;border-radius=8%2C8%2C8%2C8&amp;border-radius-inner=8%2C8%2C8%2C8&amp;blend-align=bottom&amp;blend-mode=normal&amp;blend-x=0&amp;blend-w=1200&amp;blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&amp;mark-x=540&amp;mark-y=333&amp;m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0xMTkmaD03MCZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" alt="Click on Last" class="step-image">
+            </div>
+            <div class="step">
+                <div class="step-header"><div class="step-number">36</div><h3>Click on This</h3></div>
+                <img src="https://images.tango.us/workflows/490ff2ef-1c79-43f1-9558-e889bf56926a/steps/e8d39eef-8e96-4726-9e86-a6c10c23a46a/d5302121-11ba-4d36-b05f-b04c77fc8e77.png?fm=png&amp;crop=focalpoint&amp;fit=crop&amp;fp-x=0.2025&amp;fp-y=0.3455&amp;fp-z=2.9392&amp;w=1200&amp;border=2%2CF4F2F7&amp;border-radius=8%2C8%2C8%2C8&amp;border-radius-inner=8%2C8%2C8%2C8&amp;blend-align=bottom&amp;blend-mode=normal&amp;blend-x=0&amp;blend-w=1200&amp;blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&amp;mark-x=529&amp;mark-y=335&amp;m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0xNDImaD02NiZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" alt="Click on This" class="step-image">
+            </div>
+            <div class="step">
+                <div class="step-header"><div class="step-number">37</div><h3>Click on Clear selections</h3></div>
+                <img src="https://images.tango.us/workflows/490ff2ef-1c79-43f1-9558-e889bf56926a/steps/0b113a42-b493-4e8b-bb96-4c278844a97b/2b762931-2b15-4aac-a90c-e7e30be382ea.png?fm=png&amp;crop=focalpoint&amp;fit=crop&amp;fp-x=0.2842&amp;fp-y=0.3164&amp;fp-z=3.1343&amp;w=1200&amp;border=2%2CF4F2F7&amp;border-radius=8%2C8%2C8%2C8&amp;border-radius-inner=8%2C8%2C8%2C8&amp;blend-align=bottom&amp;blend-mode=normal&amp;blend-x=0&amp;blend-w=1200&amp;blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&amp;mark-x=578&amp;mark-y=346&amp;m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz00NCZoPTQ0JmZpdD1jcm9wJmNvcm5lci1yYWRpdXM9MTA%3D" alt="Click on Clear selections" class="step-image">
+            </div>
+            <div class="step">
+                <div class="step-header"><div class="step-number">38</div><h3>Click on End date, calendar button, choose date</h3></div>
+                <img src="https://images.tango.us/workflows/490ff2ef-1c79-43f1-9558-e889bf56926a/steps/8624c6f3-6148-40f5-afc6-cb0977737464/82f32f7f-ca8e-4355-a2f6-983eeef1e042.png?fm=png&amp;crop=focalpoint&amp;fit=crop&amp;fp-x=0.2839&amp;fp-y=0.3413&amp;fp-z=3.0048&amp;w=1200&amp;border=2%2CF4F2F7&amp;border-radius=8%2C8%2C8%2C8&amp;border-radius-inner=8%2C8%2C8%2C8&amp;blend-align=bottom&amp;blend-mode=normal&amp;blend-x=0&amp;blend-w=1200&amp;blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&amp;mark-x=571&amp;mark-y=332&amp;m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz01OCZoPTczJmZpdD1jcm9wJmNvcm5lci1yYWRpdXM9MTA%3D" alt="Click on End date calendar" class="step-image">
+            </div>
+            <div class="step">
+                <div class="step-header"><div class="step-number">39</div><h3>Click on Previous month</h3></div>
+                <img src="https://images.tango.us/workflows/490ff2ef-1c79-43f1-9558-e889bf56926a/steps/85052902-51f6-4779-8b81-1199f070f3d3/11b226b2-4c85-4853-90fa-cf634e5621ac.png?fm=png&amp;crop=focalpoint&amp;fit=crop&amp;fp-x=0.3628&amp;fp-y=0.3852&amp;fp-z=2.9577&amp;w=1200&amp;border=2%2CF4F2F7&amp;border-radius=8%2C8%2C8%2C8&amp;border-radius-inner=8%2C8%2C8%2C8&amp;blend-align=bottom&amp;blend-mode=normal&amp;blend-x=0&amp;blend-w=1200&amp;blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&amp;mark-x=559&amp;mark-y=326&amp;m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz04MyZoPTgzJmZpdD1jcm9wJmNvcm5lci1yYWRpdXM9MTA%3D" alt="Click on Previous month" class="step-image">
+            </div>
+            <div class="step">
+                <div class="step-header"><div class="step-number">40</div><h3>Click on 31</h3></div>
+                <div class="step-description">Export the data of 2026 - rename the file 2026.csv</div>
+                <img src="https://images.tango.us/workflows/490ff2ef-1c79-43f1-9558-e889bf56926a/steps/98d8ba7a-1723-4d4f-af7c-659d2920a030/4ce45100-dcdb-40a9-bdc1-44e4871c5ba9.png?fm=png&amp;crop=focalpoint&amp;fit=crop&amp;fp-x=0.3796&amp;fp-y=0.5884&amp;fp-z=2.9577&amp;w=1200&amp;border=2%2CF4F2F7&amp;border-radius=8%2C8%2C8%2C8&amp;border-radius-inner=8%2C8%2C8%2C8&amp;blend-align=bottom&amp;blend-mode=normal&amp;blend-x=0&amp;blend-w=1200&amp;blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&amp;mark-x=559&amp;mark-y=326&amp;m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz04MyZoPTgzJmZpdD1jcm9wJmNvcm5lci1yYWRpdXM9MTA%3D" alt="Click on 31" class="step-image">
+            </div>
+
+            <div class="section-divider">
+                <span>CSM Dashboard 2.0 – Edit Client</span>
+            </div>
+
+            <div class="step">
+                <div class="step-header"><div class="step-number">41</div><h3>Enter your email address</h3></div>
+                <div class="step-description">e.g. urir@pixellot.tv</div>
+                <img src="https://images.tango.us/workflows/490ff2ef-1c79-43f1-9558-e889bf56926a/steps/55e18052-a3bf-44bd-9245-e55be8797339/35a3deee-4b62-4bec-b99d-82f0e33eb31f.png?fm=png&amp;crop=focalpoint&amp;fit=crop&amp;fp-x=0.5003&amp;fp-y=0.5598&amp;fp-z=1.7747&amp;w=1200&amp;border=2%2CF4F2F7&amp;border-radius=8%2C8%2C8%2C8&amp;border-radius-inner=8%2C8%2C8%2C8&amp;blend-align=bottom&amp;blend-mode=normal&amp;blend-x=0&amp;blend-w=1200&amp;blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&amp;mark-x=319&amp;mark-y=338&amp;m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz01NjEmaD02MSZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" alt="Enter your email address" class="step-image">
+            </div>
+            <div class="step">
+                <div class="step-header"><div class="step-number">42</div><h3>Click on Send Magic Link</h3></div>
+                <img src="https://images.tango.us/workflows/490ff2ef-1c79-43f1-9558-e889bf56926a/steps/920f0658-6b30-40c6-bb68-2e04dbfcb599/bf2c2d55-f580-4a6a-a9f0-9281ab7a6632.png?fm=png&amp;crop=focalpoint&amp;fit=crop&amp;fp-x=0.5003&amp;fp-y=0.6127&amp;fp-z=1.7747&amp;w=1200&amp;border=2%2CF4F2F7&amp;border-radius=8%2C8%2C8%2C8&amp;border-radius-inner=8%2C8%2C8%2C8&amp;blend-align=bottom&amp;blend-mode=normal&amp;blend-x=0&amp;blend-w=1200&amp;blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&amp;mark-x=319&amp;mark-y=338&amp;m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz01NjEmaD02MSZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" alt="Click on Send Magic Link" class="step-image">
+            </div>
+            <div class="step">
+                <div class="step-header"><div class="step-number">43</div><h3>A link will be sent to your email</h3></div>
+                <div class="step-description">Click on "Log in to Dashboard" on the link you receive</div>
+                <img src="https://images.tango.us/workflows/490ff2ef-1c79-43f1-9558-e889bf56926a/steps/b550acb8-99ab-443f-8865-73e27f622a02/1080b8d2-4eeb-4b9a-86ea-df874d6b04c9.png?fm=png&amp;crop=focalpoint&amp;fit=crop&amp;fp-x=0.5003&amp;fp-y=0.4979&amp;fp-z=1.3481&amp;w=1200&amp;border=2%2CF4F2F7&amp;border-radius=8%2C8%2C8%2C8&amp;border-radius-inner=8%2C8%2C8%2C8&amp;blend-align=bottom&amp;blend-mode=normal&amp;blend-x=0&amp;blend-w=1200&amp;blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&amp;mark-x=361&amp;mark-y=130&amp;m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz00NzkmaD00NzYmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" alt="A link will be sent to your email" class="step-image">
+            </div>
+            <div class="step">
+                <div class="step-header"><div class="step-number">44</div><h3>Click on the client you wish to edit</h3></div>
+                <div class="step-description">e.g. Top Hockey League</div>
+                <img src="https://images.tango.us/workflows/490ff2ef-1c79-43f1-9558-e889bf56926a/steps/aa5a0f36-acbe-41f3-9f22-1c83dca6180c/559c88fa-d0b3-4e53-b356-ed237b86e077.png?fm=png&amp;crop=focalpoint&amp;fit=crop&amp;fp-x=0.0626&amp;fp-y=0.9545&amp;fp-z=2.5799&amp;w=1200&amp;border=2%2CF4F2F7&amp;border-radius=8%2C8%2C8%2C8&amp;border-radius-inner=8%2C8%2C8%2C8&amp;blend-align=bottom&amp;blend-mode=normal&amp;blend-x=0&amp;blend-w=1200&amp;blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&amp;mark-x=58&amp;mark-y=623&amp;m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0yNzEmaD01MiZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" alt="Click on the client you wish to edit" class="step-image">
+            </div>
+            <div class="step">
+                <div class="step-header"><div class="step-number">45</div><h3>Click on Edit Client</h3></div>
+                <img src="https://images.tango.us/workflows/490ff2ef-1c79-43f1-9558-e889bf56926a/steps/6f5bf708-81cc-463f-af61-33cf2a237973/1c5afb82-393c-47e4-aa54-b66ab9752fe6.png?fm=png&amp;crop=focalpoint&amp;fit=crop&amp;fp-x=0.9426&amp;fp-y=0.1153&amp;fp-z=2.8855&amp;w=1200&amp;border=2%2CF4F2F7&amp;border-radius=8%2C8%2C8%2C8&amp;border-radius-inner=8%2C8%2C8%2C8&amp;blend-align=bottom&amp;blend-mode=normal&amp;blend-x=0&amp;blend-w=1200&amp;blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&amp;mark-x=881&amp;mark-y=195&amp;m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0yNDAmaD05OSZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" alt="Click on Edit Client" class="step-image">
+            </div>
+            <div class="step">
+                <div class="step-header"><div class="step-number">46</div><h3>On Production Hours - Sport Breakdown</h3></div>
+                <img src="https://images.tango.us/workflows/490ff2ef-1c79-43f1-9558-e889bf56926a/steps/ac1347e2-9dcb-4762-8488-2aa17efdfbd0/1fb142e6-e2d0-4446-8ad7-f9f4c4e97e38.png?fm=png&amp;crop=focalpoint&amp;fit=crop&amp;fp-x=0.0642&amp;fp-y=0.4519&amp;fp-z=2.7021&amp;w=1200&amp;border=2%2CF4F2F7&amp;border-radius=8%2C8%2C8%2C8&amp;border-radius-inner=8%2C8%2C8%2C8&amp;blend-align=bottom&amp;blend-mode=normal&amp;blend-x=0&amp;blend-w=1200&amp;blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&amp;mark-x=95&amp;mark-y=322&amp;m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0yMjcmaD05MyZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" alt="On Production Hours - Sport Breakdown" class="step-image">
+            </div>
+            <div class="step">
+                <div class="step-header"><div class="step-number">47</div><h3>Click on 2024</h3></div>
+                <img src="https://images.tango.us/workflows/490ff2ef-1c79-43f1-9558-e889bf56926a/steps/9de8f3b5-c4ac-4e28-81d5-fa48027df113/b53d3bb4-09ad-46ac-b1a2-ad2de525f935.png?fm=png&amp;crop=focalpoint&amp;fit=crop&amp;fp-x=0.0740&amp;fp-y=0.3841&amp;fp-z=2.6194&amp;w=1200&amp;border=2%2CF4F2F7&amp;border-radius=8%2C8%2C8%2C8&amp;border-radius-inner=8%2C8%2C8%2C8&amp;blend-align=bottom&amp;blend-mode=normal&amp;blend-x=0&amp;blend-w=1200&amp;blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&amp;mark-x=104&amp;mark-y=327&amp;m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0yNTcmaD04MiZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" alt="Click on 2024" class="step-image">
+            </div>
+            <div class="step">
+                <div class="step-header"><div class="step-number">48</div><h3>Select a file from upload menu</h3></div>
+                <div class="step-description">select 2024.csv</div>
+                <img src="https://images.tango.us/workflows/490ff2ef-1c79-43f1-9558-e889bf56926a/steps/101663a1-4475-4d32-af28-75002c5db7d7/75b4c51b-adb4-43f9-8990-e777a7af7eb3.png?fm=png&amp;crop=focalpoint&amp;fit=crop&amp;fp-x=0.1888&amp;fp-y=0.4519&amp;fp-z=2.1101&amp;w=1200&amp;border=2%2CF4F2F7&amp;border-radius=8%2C8%2C8%2C8&amp;border-radius-inner=8%2C8%2C8%2C8&amp;blend-align=bottom&amp;blend-mode=normal&amp;blend-x=0&amp;blend-w=1200&amp;blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&amp;mark-x=258&amp;mark-y=332&amp;m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz00NDAmaD03MiZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" alt="Select a file from upload menu" class="step-image">
+            </div>
+            <div class="step">
+                <div class="step-header"><div class="step-number">49</div><h3>Click on 2025</h3></div>
+                <img src="https://images.tango.us/workflows/490ff2ef-1c79-43f1-9558-e889bf56926a/steps/8b2dda86-c1d6-4e5d-92a2-8e8849adcdb1/cdcefedc-6e5d-4d46-97e0-8e05c9296b69.png?fm=png&amp;crop=focalpoint&amp;fit=crop&amp;fp-x=0.0740&amp;fp-y=0.4857&amp;fp-z=2.6194&amp;w=1200&amp;border=2%2CF4F2F7&amp;border-radius=8%2C8%2C8%2C8&amp;border-radius-inner=8%2C8%2C8%2C8&amp;blend-align=bottom&amp;blend-mode=normal&amp;blend-x=0&amp;blend-w=1200&amp;blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&amp;mark-x=104&amp;mark-y=327&amp;m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0yNTcmaD04MiZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" alt="Click on 2025" class="step-image">
+            </div>
+            <div class="step">
+                <div class="step-header"><div class="step-number">50</div><h3>Select a file from upload menu</h3></div>
+                <img src="https://images.tango.us/workflows/490ff2ef-1c79-43f1-9558-e889bf56926a/steps/fcf812af-e306-445f-8524-eff459768a52/4a2fe4da-77f3-4f9a-b43b-d14ae5f4ca62.png?fm=png&amp;crop=focalpoint&amp;fit=crop&amp;fp-x=0.1888&amp;fp-y=0.4519&amp;fp-z=2.1101&amp;w=1200&amp;border=2%2CF4F2F7&amp;border-radius=8%2C8%2C8%2C8&amp;border-radius-inner=8%2C8%2C8%2C8&amp;blend-align=bottom&amp;blend-mode=normal&amp;blend-x=0&amp;blend-w=1200&amp;blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&amp;mark-x=258&amp;mark-y=332&amp;m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz00NDAmaD03MiZmaXQ9Y3JvcCZjb3JuZXItcmFkaXVzPTEw" alt="Select a file from upload menu" class="step-image">
+            </div>
+            <div class="step">
+                <div class="step-header"><div class="step-number">51</div><h3>Click on Save All Changes…</h3></div>
+                <img src="https://images.tango.us/workflows/490ff2ef-1c79-43f1-9558-e889bf56926a/steps/d161b941-5fc4-4626-b870-1fe6008d85ab/5459be5c-d968-4f06-8e86-851dd208cdca.png?fm=png&amp;crop=focalpoint&amp;fit=crop&amp;fp-x=0.4951&amp;fp-y=0.9439&amp;fp-z=1.0131&amp;w=1200&amp;border=2%2CF4F2F7&amp;border-radius=8%2C8%2C8%2C8&amp;border-radius-inner=8%2C8%2C8%2C8&amp;blend-align=bottom&amp;blend-mode=normal&amp;blend-x=0&amp;blend-w=1200&amp;blend64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL21hZGUtd2l0aC10YW5nby13YXRlcm1hcmstdjIucG5n&amp;mark-x=14&amp;mark-y=662&amp;m64=aHR0cHM6Ly9pbWFnZXMudGFuZ28udXMvc3RhdGljL2JsYW5rLnBuZz9tYXNrPWNvcm5lcnMmYm9yZGVyPTQlMkNGRjc0NDImdz0xMTcyJmg9NjUmZml0PWNyb3AmY29ybmVyLXJhZGl1cz0xMA%3D%3D" alt="Click on Save All Changes" class="step-image">
+            </div>
+        </div>
+        <div class="back-to-home">
+            <a href="index.html" class="back-to-home-btn">← Back to Home</a>
+        </div>
+        <div class="footer">
+            <p>Created with <a href="https://tango.ai" target="_blank">Tango.ai</a></p>
+            <p style="margin-top: 10px; font-size: 0.85em;">Pixellot CSM Dashboard – Export and Update Data</p>
+        </div>
+    </div>
+    </div>
+    <script>
+        const CORRECT_PASSWORD = 'PixellotCSM2026';
+        const SESSION_KEY = 'updateDashboardAuth';
+        function checkAuth() {
+            const isAuth = sessionStorage.getItem(SESSION_KEY);
+            if (isAuth === 'true') unlockContent();
+            else document.getElementById('accessCode').focus();
+        }
+        function verifyPassword() {
+            const input = document.getElementById('accessCode');
+            const errorMsg = document.getElementById('passwordError');
+            const enteredPassword = input.value;
+            if (enteredPassword === CORRECT_PASSWORD) {
+                sessionStorage.setItem(SESSION_KEY, 'true');
+                unlockContent();
+            } else {
+                errorMsg.classList.add('active');
+                input.value = '';
+                input.focus();
+            }
+        }
+        function unlockContent() {
+            document.getElementById('passwordOverlay').classList.add('hidden');
+            document.getElementById('contentWrapper').classList.add('unlocked');
+        }
+        document.getElementById('submitPassword').addEventListener('click', verifyPassword);
+        document.getElementById('accessCode').addEventListener('keypress', function(e) { if (e.key === 'Enter') verifyPassword(); });
+        checkAuth();
+    </script>
+</body>
+</html>
